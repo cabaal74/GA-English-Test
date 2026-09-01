@@ -111,6 +111,36 @@
  .giba-mini-bubble{right:67px;bottom:100px}
 }
 
+
+/* Cards de progresso: navegação e responsividade revisadas */
+.dash-card[role="button"]{
+  position:relative;
+  z-index:2;
+  width:100%;
+  box-sizing:border-box;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+  -webkit-touch-callout:none;
+  user-select:none;
+  pointer-events:auto;
+}
+.dash-card[role="button"] *{pointer-events:none}
+#verbDashboard{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:820px){
+  #verbDashboard{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #verbDashboard .dash-card:last-child{grid-column:1/-1}
+}
+@media(max-width:560px){
+  .dash-card[role="button"]{min-width:0}
+  #testDashboard,#verbDashboard{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #verbDashboard .dash-card:last-child{grid-column:1/-1;min-height:92px}
+}
+@media(max-width:360px){
+  #testDashboard,#verbDashboard{grid-template-columns:1fr}
+  #verbDashboard .dash-card:last-child{grid-column:auto}
+  .dash-card[role="button"]{min-height:82px}
+}
+
 </style>
 </head>
 
@@ -471,7 +501,7 @@ function setDashboardGroup(group){
 function updateVerbDashboard(){
   // Treino de Verbos: unique lemmas that have been completed at least once in any saved lesson state.
   const all=vvLessonVerbs('all'),doneVV=new Set();
-  Object.values(verbVocabState).forEach(s=>{if(s&&Array.isArray(s.order)&&Array.isArray(s.mastered))s.mastered.forEach(pos=>{const v=s.order[pos];if(typeof v==='string')doneVV.add(v);});});
+  Object.values(verbVocabState).forEach(s=>{if(s&&Array.isArray(s.mastered))s.mastered.forEach(v=>{if(typeof v==='string')doneVV.add(v);});});
   const vvTotal=all.length||45,vvDone=Math.min(doneVV.size,vvTotal),vvPct=vvTotal?Math.round(vvDone/vvTotal*100):0;
   // Formas Verbais: mastered unique verb|form ids across all rounds.
   const vfTotal=all.filter(v=>verbFormsData[v]).reduce((n,v)=>n+verbFormsData[v].filter(x=>x&&x!=='—').length,0),vfDoneSet=new Set();
@@ -573,24 +603,6 @@ function renderPage(){
     quiz.appendChild(card);
   }
   
-function bindDashboardShortcut(id,openFn){
-  const el=document.getElementById(id);
-  if(!el)return;
-  const activate=()=>{openFn();scheduleSave();};
-  el.addEventListener('click',activate);
-  el.addEventListener('keydown',(e)=>{
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();activate();}
-  });
-}
-bindDashboardShortcut('dashQuestions',()=>{showQuestions();renderPage();closeMenu();});
-bindDashboardShortcut('dashTranslation',()=>{showTranslation();});
-bindDashboardShortcut('dashUnscramble',()=>{showUnscramble();});
-bindDashboardShortcut('dashListening',()=>{showListening();});
-bindDashboardShortcut('dashVerbVocab',()=>{showVerbVocab(true);});
-bindDashboardShortcut('dashVerbForms',()=>{showVerbForms(true);});
-bindDashboardShortcut('dashVerbSentences',()=>{showVerbs(true);});
-
-
 
 document.querySelectorAll('#questionPages .page-link').forEach((b,idx)=>b.classList.toggle('active',idx===currentPage));
   document.querySelector('#questionsView .hero h1').textContent=`Perguntas – Página ${currentPage+1}`; document.getElementById('pageChip').textContent=`${start+1} a ${end} de 100`;
@@ -1147,6 +1159,37 @@ function toggleMenu(){
 }
 
 document.querySelectorAll('#questionPages .page-link').forEach(b=>b.addEventListener('click',()=>setPage(Number(b.dataset.page))));
+
+function bindProgressCard(id,openFn){
+  const el=document.getElementById(id);
+  if(!el)return;
+  let lastTouch=0;
+  const activate=(e)=>{
+    if(e){e.preventDefault();e.stopPropagation();}
+    openFn();
+    scheduleSave();
+    requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'smooth'}));
+  };
+  el.addEventListener('click',e=>{
+    if(Date.now()-lastTouch<500)return;
+    activate(e);
+  });
+  el.addEventListener('touchend',e=>{
+    lastTouch=Date.now();
+    activate(e);
+  },{passive:false});
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){activate(e);}
+  });
+}
+bindProgressCard('dashQuestions',()=>{showQuestions();renderPage();closeMenu();});
+bindProgressCard('dashTranslation',()=>showTranslation());
+bindProgressCard('dashUnscramble',()=>showUnscramble());
+bindProgressCard('dashListening',()=>showListening());
+bindProgressCard('dashVerbVocab',()=>showVerbVocab(true));
+bindProgressCard('dashVerbForms',()=>showVerbForms(true));
+bindProgressCard('dashVerbSentences',()=>showVerbs(true));
+
 const gibaAssistant=document.getElementById('gibaAssistant');
 const gibaAssistantBtn=document.getElementById('gibaAssistantBtn');
 const gibaAssistantWrap=document.getElementById('gibaAssistantWrap');
