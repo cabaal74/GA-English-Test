@@ -120,12 +120,12 @@
         <div class="verb-lesson-toolbar"><div><strong id="vvOverallTitle">Treino de vocabulário verbal</strong><div class="verb-list-summary" id="vvOverallMeta">Escolha uma lição para começar</div></div><div class="verb-progress-shell"><div class="verb-progress-fill" id="vvOverallBar"></div></div></div>
         <div id="vvLessonSelect"><div class="verb-lesson-grid" id="vvLessonGrid"></div></div>
         <div id="vvPracticePanel" class="verb-practice hidden"></div>
+      </section>
       <section id="verbFormsView" class="view-panel verb-view hidden">
         <div class="hero"><h1>Formas Verbais – Gibs Academy</h1><span class="page-chip">31 lições + Todas</span><p>ⓘ &nbsp; Aprenda a família de cada verbo: forma base, 3ª pessoa, forma -ing, passado e particípio. Um card por vez, com reforço dos erros.</p></div>
         <div class="verb-lesson-toolbar"><div><strong>Treino de formas verbais</strong><div class="verb-list-summary" id="vfOverallMeta">Escolha uma lição para começar</div></div><div class="verb-progress-shell"><div class="verb-progress-fill" id="vfOverallBar"></div></div></div>
         <div id="vfLessonSelect"><div class="verb-lesson-grid" id="vfLessonGrid"></div></div>
         <div id="vfPracticePanel" class="verb-practice hidden"></div>
-      </section>
       </section>
     </main>
   </section>
@@ -454,9 +454,6 @@ bindDashboardShortcut('dashTranslation',()=>{showTranslation();});
 bindDashboardShortcut('dashUnscramble',()=>{showUnscramble();});
 bindDashboardShortcut('dashListening',()=>{showListening();});
 
-document.getElementById('verbVocabTab').addEventListener('click',()=>showVerbVocab(true));
-document.getElementById('verbFormsTab').addEventListener('click',()=>showVerbForms(true));
-document.querySelectorAll('.vv-mode').forEach(b=>b.addEventListener('click',()=>vvSetMode(b.dataset.vvmode)));
 document.querySelectorAll('#questionPages .page-link').forEach((b,idx)=>b.classList.toggle('active',idx===currentPage));
   document.querySelector('#questionsView .hero h1').textContent=`Perguntas – Página ${currentPage+1}`; document.getElementById('pageChip').textContent=`${start+1} a ${end} de 100`;
   document.getElementById('topTitle').textContent=`Perguntas · Página ${currentPage+1}`;
@@ -962,6 +959,10 @@ document.getElementById('lGradeBtn').addEventListener('click',()=>gradeListening
 document.getElementById('lResetPageBtn').addEventListener('click',resetListeningPage);
 document.getElementById('lPrevBtn').addEventListener('click',()=>{if(currentListeningPage>0)setListeningPage(currentListeningPage-1);});document.getElementById('lNextBtn').addEventListener('click',()=>{if(currentListeningPage<4)setListeningPage(currentListeningPage+1);});
 document.getElementById('verbsTab').addEventListener('click',()=>{showVerbs(true);scheduleSave();});
+document.getElementById('verbVocabTab').addEventListener('click',()=>{showVerbVocab(true);scheduleSave();});
+document.getElementById('verbFormsTab').addEventListener('click',()=>{showVerbForms(true);scheduleSave();});
+document.querySelectorAll('.vv-mode').forEach(b=>b.addEventListener('click',()=>vvSetMode(b.dataset.vvmode)));
+
 document.getElementById('gradeBtn').addEventListener('click',()=>gradePage(true));
 document.getElementById('resetPageBtn').addEventListener('click',resetCurrentPage);
 document.getElementById('prevBtn').addEventListener('click',()=>{if(currentPage>0)setPage(currentPage-1);});document.getElementById('nextBtn').addEventListener('click',()=>{if(currentPage<4)setPage(currentPage+1);});
