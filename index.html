@@ -738,7 +738,7 @@ function vvDirectionFor(lemma,pos){
   let h=0;for(const ch of lemma)h=(h*31+ch.charCodeAt(0))>>>0;
   return ((h+pos)%2===0)?'pten':'enpt';
 }
-function vvEnglish(v){return `To ${v}`;}
+function vvEnglish(v){return `to ${String(v).toLowerCase()}`;}
 function vvDistractors(answer,lesson){
   const local=vvLessonVerbs(lesson).filter(v=>v!==answer);
   const global=Object.keys(verbVocabularyPT).filter(v=>v!==answer&&!local.includes(v));
@@ -746,7 +746,7 @@ function vvDistractors(answer,lesson){
 }
 function vvCardOptions(lemma,dir){
   const verbs=vvShuffle([lemma,...vvDistractors(lemma,currentVerbVocabLesson)]);
-  return verbs.map(v=>({v,label:dir==='pten'?vvEnglish(v):verbVocabularyPT[v]}));
+  return verbs.map(v=>({v,label:dir==='pten'?vvEnglish(v):String(verbVocabularyPT[v]||'').toLowerCase()}));
 }
 function vvRenderNav(){
   const nav=document.getElementById('verbVocabNav');if(!nav)return;
@@ -793,7 +793,7 @@ function vvRenderCard(){
   if(s.pos>=total){vvRenderComplete();return;}
   const lemma=s.order[s.pos],dir=vvDirectionFor(lemma,s.pos),opts=vvCardOptions(lemma,dir);
   const prompt=dir==='pten'?'Qual é o verbo em inglês?':'Qual é o significado em português?';
-  const word=dir==='pten'?verbVocabularyPT[lemma]:vvEnglish(lemma);
+  const word=dir==='pten'?String(verbVocabularyPT[lemma]||'').toLowerCase():vvEnglish(lemma);
   const lessonName=currentVerbVocabLesson==='all'?'Todas as lições':`Lição ${currentVerbVocabLesson}`;
   panel.innerHTML=`<div class="verb-card"><div class="verb-card-top"><div><div class="verb-kicker">${lessonName} · ${verbVocabMode==='mixed'?'Misturado':verbVocabMode==='pten'?'PT → EN':'EN → PT'}</div></div><div class="verb-card-count">${s.pos+1} / ${total}</div></div><div class="vv-prompt">${prompt}</div><div class="vv-word">${escapeHtml(word)}</div><div class="vv-options">${opts.map((o,i)=>`<button type="button" class="vv-option" data-vv="${escapeHtml(o.v)}">${String.fromCharCode(65+i)}) ${escapeHtml(o.label)}</button>`).join('')}</div><div class="vv-feedback" id="vvFeedback">Escolha uma alternativa.</div><div class="vv-actions"><button class="mini-btn" id="vvBackLessons">← Escolher lição</button></div></div>`;
   panel.querySelectorAll('.vv-option').forEach(b=>b.addEventListener('click',()=>vvAnswer(b,lemma,dir)));
@@ -804,7 +804,7 @@ function vvAnswer(btn,lemma,dir){
   const s=vvEnsureState(),fb=document.getElementById('vvFeedback');
   if(btn.dataset.vv===lemma){
     btn.classList.add('correct');if(!s.hadError)s.firstTry++;if(!s.mastered.includes(lemma))s.mastered.push(lemma);
-    fb.className='vv-feedback ok';fb.textContent=`✓ Correto — ${vvEnglish(lemma)} = ${verbVocabularyPT[lemma]}.`;
+    fb.className='vv-feedback ok';fb.textContent=`✓ correto — ${vvEnglish(lemma)} = ${String(verbVocabularyPT[lemma]||'').toLowerCase()}.`;
     s.pos++;s.hadError=false;scheduleSave();setTimeout(vvRenderCard,550);
   }else{
     btn.classList.add('wrong');btn.disabled=true;s.wrong++;s.hadError=true;verbVocabErrorCounts[lemma]=(verbVocabErrorCounts[lemma]||0)+1;
