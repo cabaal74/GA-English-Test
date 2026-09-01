@@ -174,6 +174,13 @@
   .giba-assistant{width:68px!important;height:144px!important}
 }
 
+
+/* Base de estudo enriquecida do Dicionário Gibs Academy */
+.gibs-study-meta{display:inline-block;margin:0 0 6px;padding:3px 8px;border-radius:999px;background:#eaf3ff;color:#1559a8;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em}
+.gibs-study-label{margin-top:10px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#718096}
+.gibs-study-example-pt{margin-top:3px;color:#64748b;font-size:13px}
+.gibs-study-related{margin-top:9px;padding-top:8px;border-top:1px solid #e6edf5;color:#53657a;font-size:12px;line-height:1.45}
+
 </style>
 </head>
 
@@ -1106,6 +1113,82 @@ function showVerbForms(selectOnly=true){setDashboardGroup('verbs');updateVerbDas
 function dictNormalize(s){
   return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim();
 }
+
+const gibsStudyBase=[
+  {"en": "coffee", "pt": "café", "type": "vocabulário", "lesson": "1", "example": "I drink coffee.", "examplePt": "Eu bebo café.", "related": "tea · milk · juice · water"},
+  {"en": "tea", "pt": "chá", "type": "vocabulário", "lesson": "1", "example": "I drink tea and soda.", "examplePt": "Eu bebo chá e refrigerante.", "related": "coffee · milk · juice"},
+  {"en": "milk", "pt": "leite", "type": "vocabulário", "lesson": "1", "example": "You drink milk.", "examplePt": "Você bebe leite.", "related": "coffee · juice · water"},
+  {"en": "juice", "pt": "suco", "type": "vocabulário", "lesson": "1", "example": "You drink juice.", "examplePt": "Você bebe suco.", "related": "coffee · tea · milk"},
+  {"en": "water", "pt": "água", "type": "vocabulário", "lesson": "1", "example": "I drink water.", "examplePt": "Eu bebo água.", "related": "juice · milk · soda"},
+  {"en": "thank you", "pt": "obrigado", "type": "expressão", "lesson": "1", "example": "Thank you.", "examplePt": "Obrigado.", "related": "thanks · please · you're welcome"},
+  {"en": "please", "pt": "por favor", "type": "expressão", "lesson": "1", "example": "Open the door, please.", "examplePt": "Abra a porta, por favor.", "related": "thank you · excuse me"},
+  {"en": "good morning", "pt": "bom dia", "type": "expressão", "lesson": "2", "example": "Good morning.", "examplePt": "Bom dia.", "related": "good afternoon · good evening · good night"},
+  {"en": "good afternoon", "pt": "boa tarde", "type": "expressão", "lesson": "2", "example": "Good afternoon.", "examplePt": "Boa tarde.", "related": "good morning · good evening"},
+  {"en": "good evening", "pt": "boa noite (chegada)", "type": "expressão", "lesson": "2", "example": "Good evening.", "examplePt": "Boa noite.", "related": "good night"},
+  {"en": "good night", "pt": "boa noite (saída)", "type": "expressão", "lesson": "2", "example": "Good night.", "examplePt": "Boa noite.", "related": "good evening"},
+  {"en": "excuse me", "pt": "desculpe / com licença / não entendi", "type": "expressão", "lesson": "3", "example": "Excuse me.", "examplePt": "Com licença.", "related": "sorry · you're welcome"},
+  {"en": "you're welcome", "pt": "de nada", "type": "expressão", "lesson": "3", "example": "You're welcome.", "examplePt": "De nada.", "related": "thank you"},
+  {"en": "for breakfast", "pt": "no café da manhã", "type": "expressão", "lesson": "5", "example": "I eat cheese for breakfast.", "examplePt": "Eu como queijo no café da manhã.", "related": "for lunch · for dinner"},
+  {"en": "for lunch", "pt": "no almoço", "type": "expressão", "lesson": "5", "example": "I eat rice and beans for lunch.", "examplePt": "Eu como arroz e feijão no almoço.", "related": "for breakfast · for dinner"},
+  {"en": "for dinner", "pt": "no jantar", "type": "expressão", "lesson": "5", "example": "I eat meat for dinner.", "examplePt": "Eu como carne no jantar.", "related": "for breakfast · for lunch"},
+  {"en": "every day", "pt": "todos os dias", "type": "expressão", "lesson": "5", "example": "I work every day.", "examplePt": "Eu trabalho todos os dias.", "related": "on weekends"},
+  {"en": "with me", "pt": "comigo", "type": "expressão", "lesson": "5", "example": "Do you like to work with me?", "examplePt": "Você gosta de trabalhar comigo?", "related": "with you"},
+  {"en": "downtown", "pt": "centro da cidade", "type": "vocabulário", "lesson": "7", "example": "I want to go downtown.", "examplePt": "Eu quero ir ao centro.", "related": "park · movies · church · office"},
+  {"en": "last name", "pt": "sobrenome", "type": "expressão", "lesson": "7", "example": "How do you spell your last name?", "examplePt": "Como se escreve seu sobrenome?", "related": "name"},
+  {"en": "how do you spell your name?", "pt": "como se escreve seu nome?", "type": "expressão", "lesson": "7", "example": "How do you spell your name?", "examplePt": "Como se escreve seu nome?", "related": "last name"},
+  {"en": "on weekends", "pt": "nos fins de semana", "type": "expressão", "lesson": "9", "example": "Where do you like to go on weekends?", "examplePt": "Onde você gosta de ir nos fins de semana?", "related": "every day"},
+  {"en": "email account", "pt": "conta de e-mail", "type": "expressão", "lesson": "9", "example": "I have an email.", "examplePt": "Eu tenho um e-mail.", "related": "email"},
+  {"en": "very much", "pt": "muito", "type": "expressão", "lesson": "11", "example": "I like my house very much.", "examplePt": "Eu gosto muito da minha casa.", "related": "a little"},
+  {"en": "a little", "pt": "um pouco", "type": "expressão", "lesson": "11", "example": "I speak a little French.", "examplePt": "Eu falo um pouco de francês.", "related": "very much"},
+  {"en": "rare", "pt": "mal passado", "type": "vocabulário", "lesson": "11", "example": "", "examplePt": "", "related": "medium · well done"},
+  {"en": "medium", "pt": "ao ponto", "type": "vocabulário", "lesson": "11", "example": "", "examplePt": "", "related": "rare · well done"},
+  {"en": "well done", "pt": "bem passado", "type": "vocabulário", "lesson": "11", "example": "", "examplePt": "", "related": "rare · medium"},
+  {"en": "nice to meet you", "pt": "muito prazer", "type": "expressão", "lesson": "13", "example": "Nice to meet you.", "examplePt": "Muito prazer.", "related": "nice to meet you, too"},
+  {"en": "nice to meet you, too", "pt": "o prazer é meu", "type": "expressão", "lesson": "13", "example": "Nice to meet you, too.", "examplePt": "O prazer é meu.", "related": "nice to meet you"},
+  {"en": "to buy", "pt": "comprar", "type": "verbo", "lesson": "13", "example": "I want to buy a new house.", "examplePt": "Eu quero comprar uma casa nova.", "related": "to sell"},
+  {"en": "to sell", "pt": "vender", "type": "verbo", "lesson": "13", "example": "I need to sell my car.", "examplePt": "Eu preciso vender meu carro.", "related": "to buy"},
+  {"en": "to know", "pt": "saber / conhecer", "type": "verbo", "lesson": "Glossário", "example": "Do you know how to go downtown?", "examplePt": "Você sabe como ir ao centro?", "related": "to understand · to spell"},
+  {"en": "to feel", "pt": "sentir", "type": "verbo", "lesson": "Glossário", "example": "Do you know how I'm feeling now?", "examplePt": "Você sabe como estou me sentindo agora?", "related": "feeling fine"},
+  {"en": "to spell", "pt": "soletrar", "type": "verbo", "lesson": "Glossário", "example": "Do you know how to spell your name?", "examplePt": "Você sabe soletrar seu nome?", "related": "name · last name"},
+  {"en": "same", "pt": "igual / mesmo", "type": "vocabulário", "lesson": "Glossário", "example": "Do you know we're all the same?", "examplePt": "Você sabe que somos todos iguais?", "related": "all"},
+  {"en": "to love", "pt": "amar", "type": "verbo", "lesson": "Glossário", "example": "I love my home.", "examplePt": "Eu amo meu lar.", "related": "home"},
+  {"en": "sweet", "pt": "doce", "type": "vocabulário", "lesson": "Glossário", "example": "Home sweet home.", "examplePt": "Lar doce lar.", "related": "home"},
+  {"en": "to think", "pt": "pensar / achar que", "type": "verbo", "lesson": "Glossário", "example": "I think I'll have a strawberry pie.", "examplePt": "Acho que vou querer uma torta de morango.", "related": "pie · strawberry"},
+  {"en": "burger", "pt": "hambúrguer", "type": "vocabulário", "lesson": "Glossário", "example": "I eat burgers and fries.", "examplePt": "Eu como hambúrgueres e batatas fritas.", "related": "fries · cheese"},
+  {"en": "pie", "pt": "torta", "type": "vocabulário", "lesson": "Glossário", "example": "I think I'll have a strawberry pie.", "examplePt": "Acho que vou querer uma torta de morango.", "related": "strawberry"},
+  {"en": "to count", "pt": "contar", "type": "verbo", "lesson": "Glossário", "example": "Let's count again!", "examplePt": "Vamos contar novamente!", "related": "numbers"},
+  {"en": "late", "pt": "tarde", "type": "vocabulário", "lesson": "Glossário", "example": "It's late.", "examplePt": "Está tarde.", "related": "too"},
+  {"en": "too", "pt": "demais / também", "type": "vocabulário", "lesson": "Glossário", "example": "It's too late to go.", "examplePt": "Está tarde demais para ir.", "related": "late"},
+  {"en": "to see", "pt": "ver", "type": "verbo", "lesson": "Glossário", "example": "I can't see any light.", "examplePt": "Eu não consigo ver nenhuma luz.", "related": "light"},
+  {"en": "going on", "pt": "acontecendo", "type": "expressão", "lesson": "Glossário", "example": "Something is going on.", "examplePt": "Algo está acontecendo.", "related": "something"},
+  {"en": "upside down", "pt": "de cabeça para baixo", "type": "expressão", "lesson": "Glossário", "example": "Everything is upside down.", "examplePt": "Tudo está de cabeça para baixo.", "related": "up · down"},
+  {"en": "feeling fine", "pt": "sentindo-se bem", "type": "expressão", "lesson": "Glossário", "example": "I am feeling fine.", "examplePt": "Estou me sentindo bem.", "related": "to feel"},
+  {"en": "all day long", "pt": "o dia todo", "type": "expressão", "lesson": "29", "example": "He works all day long.", "examplePt": "Ele trabalha o dia todo.", "related": "all night long"},
+  {"en": "all night long", "pt": "a noite toda", "type": "expressão", "lesson": "29", "example": "She sleeps all night long.", "examplePt": "Ela dorme a noite toda.", "related": "all day long"},
+  {"en": "on foot", "pt": "a pé", "type": "expressão", "lesson": "29", "example": "", "examplePt": "", "related": "by car · by bus · by train"},
+  {"en": "by car", "pt": "de carro", "type": "expressão", "lesson": "29", "example": "", "examplePt": "", "related": "by bus · by bicycle · on foot"},
+  {"en": "by bus", "pt": "de ônibus", "type": "expressão", "lesson": "29", "example": "", "examplePt": "", "related": "by car · by train · on foot"},
+  {"en": "by train", "pt": "de trem", "type": "expressão", "lesson": "29", "example": "", "examplePt": "", "related": "by subway · by bus"},
+  {"en": "to take a nap", "pt": "tirar um cochilo", "type": "expressão", "lesson": "47", "example": "", "examplePt": "", "related": "sleep"},
+  {"en": "me too", "pt": "eu também", "type": "expressão", "lesson": "47", "example": "Me too.", "examplePt": "Eu também.", "related": "also · too"},
+  {"en": "overtime", "pt": "hora extra", "type": "vocabulário", "lesson": "47", "example": "", "examplePt": "", "related": "work"},
+  {"en": "part-time", "pt": "meio período", "type": "expressão", "lesson": "51", "example": "", "examplePt": "", "related": "full-time"},
+  {"en": "full-time", "pt": "período integral", "type": "expressão", "lesson": "51", "example": "", "examplePt": "", "related": "part-time"},
+  {"en": "conference room", "pt": "sala de reuniões", "type": "expressão", "lesson": "51", "example": "", "examplePt": "", "related": "conference call"},
+  {"en": "conference call", "pt": "conferência telefônica", "type": "expressão", "lesson": "51", "example": "", "examplePt": "", "related": "conference room"},
+  {"en": "by myself", "pt": "sozinho", "type": "expressão", "lesson": "51", "example": "", "examplePt": "", "related": "by yourself · by himself · by herself"},
+  {"en": "to take a shower", "pt": "tomar banho", "type": "expressão", "lesson": "59", "example": "", "examplePt": "", "related": "shower"},
+  {"en": "gift certificate", "pt": "vale-presente", "type": "expressão", "lesson": "59", "example": "", "examplePt": "", "related": "gift"},
+  {"en": "somebody", "pt": "alguém", "type": "vocabulário", "lesson": "59", "example": "I need to talk to somebody.", "examplePt": "Eu preciso falar com alguém.", "related": "anybody · nobody"},
+  {"en": "anybody", "pt": "alguém / ninguém", "type": "vocabulário", "lesson": "59", "example": "Why isn't anybody here?", "examplePt": "Por que ninguém está aqui?", "related": "somebody · nobody"},
+  {"en": "nobody", "pt": "ninguém", "type": "vocabulário", "lesson": "59", "example": "Nobody is home.", "examplePt": "Ninguém está em casa.", "related": "somebody · anybody"}
+];
+
+function gibsStudyInfo(en){
+  const n=dictNormalize(en);
+  return gibsStudyBase.find(x=>dictNormalize(x.en)===n)||null;
+}
+
 function buildGibsDictionary(){
   const merged={};
   const add=(en,pt)=>{
@@ -1114,6 +1197,7 @@ function buildGibsDictionary(){
     if(!merged[en])merged[en]=pt;
     else if(!dictNormalize(merged[en]).includes(dictNormalize(pt)))merged[en]+=' / '+pt;
   };
+  gibsStudyBase.forEach(x=>add(x.en,x.pt));
   Object.entries(gibsGlossaryExtra||{}).forEach(([en,pt])=>add(en,pt));
   Object.entries(optionWordTranslations||{}).forEach(([en,pt])=>add(en,pt));
   Object.entries(verbVocabularyPT||{}).forEach(([en,pt])=>add(`to ${en}`,pt));
@@ -1149,11 +1233,24 @@ function searchGibsDictionary(q){
 }
 function renderGibsDictionary(q){
   const box=document.getElementById('gibsDictResults'),results=searchGibsDictionary(q);
-  if(!String(q||'').trim()){box.innerHTML='<div class="gibs-dict-empty">Digite uma palavra para pesquisar.</div>';return;}
-  if(!results.length){box.innerHTML='<div class="gibs-dict-empty">Nenhuma palavra encontrada na base das 31 lições.</div>';return;}
+  if(!String(q||'').trim()){box.innerHTML='<div class="gibs-dict-empty">Digite uma palavra ou expressão para pesquisar.</div>';return;}
+  if(!results.length){box.innerHTML='<div class="gibs-dict-empty">Nenhum conteúdo encontrado na base das 31 lições.</div>';return;}
   box.innerHTML=results.map((r,i)=>{
-    const ex=gibsExampleFor(r.en);
-    return `<article class="gibs-dict-item"><div class="gibs-dict-row"><div><div class="gibs-dict-en">${escapeHtml(r.en)}</div><div class="gibs-dict-pt">${escapeHtml(r.pt)}</div>${ex?`<div class="gibs-dict-example">Ex.: ${escapeHtml(ex)}</div>`:''}</div><button type="button" class="gibs-dict-speak" data-speak="${escapeHtml(r.en.replace(/^to\s+/i,''))}" aria-label="Ouvir ${escapeHtml(r.en)}">🔊</button></div></article>`;
+    const info=gibsStudyInfo(r.en);
+    const ex=(info&&info.example)||gibsExampleFor(r.en);
+    const exPt=info&&info.examplePt?info.examplePt:'';
+    const meta=info?`<div class="gibs-study-meta">${escapeHtml(info.type)} · ${info.lesson==='Glossário'?'Glossário':`Lição ${info.lesson}`}</div>`:'';
+    const related=info&&info.related?`<div class="gibs-study-related"><strong>Veja também:</strong> ${escapeHtml(info.related)}</div>`:'';
+    return `<article class="gibs-dict-item">
+      <div class="gibs-dict-row"><div style="min-width:0;flex:1">
+        ${meta}
+        <div class="gibs-dict-en">${escapeHtml(r.en)}</div>
+        <div class="gibs-dict-pt">${escapeHtml(r.pt)}</div>
+        ${ex?`<div class="gibs-study-label">Exemplo da apostila</div><div class="gibs-dict-example">${escapeHtml(ex)}</div>`:''}
+        ${exPt?`<div class="gibs-study-example-pt">${escapeHtml(exPt)}</div>`:''}
+        ${related}
+      </div><button type="button" class="gibs-dict-speak" data-speak="${escapeHtml(r.en.replace(/^to\s+/i,''))}" aria-label="Ouvir ${escapeHtml(r.en)}">🔊</button></div>
+    </article>`;
   }).join('');
   box.querySelectorAll('[data-speak]').forEach(b=>b.addEventListener('click',()=>{
     if(!('speechSynthesis' in window))return;
