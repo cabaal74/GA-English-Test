@@ -399,6 +399,39 @@ body.giba-open .giba-flag-btn{
   mix-blend-mode:normal!important;
 }
 
+
+/* A2 — pergunta em inglês + resposta-guia em português */
+.vocab-answer-guide{
+  margin:14px 0 12px;
+  padding:12px 14px;
+  border:1px solid #c9d8ea;
+  border-left:4px solid #2a72d4;
+  border-radius:12px;
+  background:#f3f7fd;
+}
+.vocab-guide-label{
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.1em;
+  color:#2864aa;
+  margin-bottom:5px;
+}
+.vocab-guide-text{
+  font-size:17px;
+  line-height:1.4;
+  font-weight:800;
+  color:#172a43;
+}
+.vocab-guide-hint{
+  margin-top:5px;
+  font-size:11px;
+  color:#718096;
+}
+@media(max-width:560px){
+  .vocab-answer-guide{padding:10px 12px;margin:12px 0 10px}
+  .vocab-guide-text{font-size:16px}
+}
+
 </style>
 </head>
 
@@ -1750,7 +1783,9 @@ function openVocabularyGroup(group){
 }
 
 function renderVocabularyLessons(){const grid=document.getElementById('vocabularyLessonGrid');document.getElementById('vocabularyGroupTitle').textContent=`Grupo ${vocabularyGroup} · Escolha uma lição`;document.querySelectorAll('[data-vocab-menu-group]').forEach(b=>b.classList.toggle('active',b.dataset.vocabMenuGroup===vocabularyGroup));grid.innerHTML=vocabularyLessonIds().map(l=>{const arr=vocabularyData[vocabularyGroup][l]||[],s=ensureVocabularyState(vocabularyGroup,l),done=new Set(s.done).size,pct=arr.length?Math.round(done/arr.length*100):0;return `<button class="verb-lesson-btn" data-vlesson="${l}"><div class="verb-lesson-name">Lição ${l}</div><div class="verb-lesson-meta">${arr.length} de 20 exercícios carregados · ${done} concluídos</div><div class="verb-mini"><span style="width:${pct}%"></span></div></button>`}).join('');grid.querySelectorAll('[data-vlesson]').forEach(b=>b.onclick=()=>{currentVocabularyLesson=Number(b.dataset.vlesson);grid.classList.add('hidden');renderVocabularyCard()});updateVocabularyProgress()}
-function renderVocabularyCard(){const box=document.getElementById('vocabularyPractice'),arr=vocabularyData[vocabularyGroup][currentVocabularyLesson]||[];box.classList.remove('hidden');if(!arr.length){box.innerHTML='<div class="verb-complete"><h2>Base em preparação</h2><p>Esta lição será completada com a apostila.</p><button class="verb-secondary" onclick="backVocabularyLessons()">← Voltar</button></div>';return}const s=ensureVocabularyState(vocabularyGroup,currentVocabularyLesson);if(s.pos>=s.order.length){box.innerHTML=`<div class="verb-complete"><h2>Lição concluída</h2><div class="big">${s.correct} acertos</div><p>${s.wrong} erros durante a rodada.</p><div class="verb-complete-actions"><button class="verb-secondary" onclick="restartVocabularyLesson()">↻ Nova rodada aleatória</button><button class="verb-secondary" onclick="backVocabularyLessons()">← Lições</button></div></div>`;updateVocabularyProgress();return}const idx=s.order[s.pos],item=arr[idx],prompt=item[0],answer=item[1];const shown=vocabularyGroup==='A2'?textWithVocabulary(prompt):escapeHtml(prompt);box.innerHTML=`<div class="verb-card"><div class="verb-card-top"><div class="verb-kicker">Grupo ${vocabularyGroup} · Lição ${currentVocabularyLesson}</div><div class="verb-card-count">${s.pos+1} / ${arr.length}</div></div><div class="vocab-card-question">${shown}</div>${vocabularyGroup==='A2'?'<div class="vocab-support">Toque ou clique em uma palavra da pergunta para ver a tradução.</div>':'<div class="vocab-support">Traduza a frase completa para o inglês.</div>'}<input id="vocabularyAnswer" class="vocab-answer-input" autocomplete="off" spellcheck="false" placeholder="${vocabularyGroup==='A1'?'Digite em inglês...':'Responda em inglês...'}"><div id="vocabularyFeedback" class="verb-feedback"></div><div class="vv-actions"><button type="button" class="btn btn-primary" id="checkVocabularyBtn">✓ Corrigir</button><button class="verb-secondary" onclick="backVocabularyLessons()">← Lições</button></div></div>`;bindVocabularyWords();const inp=document.getElementById('vocabularyAnswer');inp.focus();window._vocabCurrentAnswer=answer;window._vocabCurrentIndex=idx;const checkBtn=document.getElementById('checkVocabularyBtn');checkBtn.addEventListener('click',triggerVocabularyCheck);inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();triggerVocabularyCheck();}}}
+const vocabularyA2AnswerGuides={"Yes, she does.": "Sim, ela faz / sim.", "Yes, I do.": "Sim.", "Yes, he does.": "Sim, ele faz / sim.", "No, I don’t.": "Não.", "No, she doesn’t.": "Não, ela não.", "I have to go now.": "Eu tenho que ir agora.", "I need to study English.": "Eu preciso estudar inglês.", "My email address is student@gibsacademy.com.br.": "Meu endereço de e-mail é student@gibsacademy.com.br.", "She prefers juice.": "Ela prefere suco.", "Because I study English.": "Porque eu estudo inglês.", "Because I prefer an apartment to a house.": "Porque eu prefiro um apartamento a uma casa.", "It’s seven o’clock.": "São sete horas.", "She has dinner at seven o’clock.": "Ela janta às sete horas.", "I get up at six o’clock.": "Eu levanto às seis horas.", "Yes, they do.": "Sim.", "I open it in the morning.": "Eu abro de manhã.", "They close the office at six o’clock.": "Eles fecham o escritório às seis horas.", "He gets up at seven o’clock.": "Ele levanta às sete horas.", "They go to bed at ten o’clock.": "Eles vão dormir às dez horas.", "I prefer to go to bed at ten o’clock.": "Eu prefiro ir dormir às dez horas.", "Yes, we do.": "Sim.", "No, they don’t.": "Não.", "No, he doesn’t.": "Não, ele não.", "Yes, I did.": "Sim.", "No, I studied Law.": "Não, eu estudei Direito.", "Yes, I worked yesterday.": "Sim, eu trabalhei ontem.", "No, I didn’t.": "Não.", "I studied Japanese yesterday.": "Eu estudei japonês ontem.", "No, I will go there tomorrow.": "Não, eu irei lá amanhã.", "I said good things to her.": "Eu disse coisas boas para ela.", "Yes, I liked the party.": "Sim, eu gostei da festa.", "I read my book.": "Eu li meu livro.", "Because I wanted it.": "Porque eu queria isso.", "The meeting started at eight o’clock.": "A reunião começou às oito horas.", "Because you didn’t come.": "Porque você não veio.", "No, I didn’t know your cousin.": "Não, eu não conhecia seu primo.", "Yes, I visited my relatives at Christmas.": "Sim, eu visitei meus parentes no Natal.", "No, I am not tired.": "Não, eu não estou cansado.", "Yes, I’m an executive.": "Sim, eu sou executivo.", "No, I can’t.": "Não, eu não posso.", "No, I’m married.": "Não, eu sou casado.", "No, he didn’t eat the whole cake.": "Não, ele não comeu o bolo inteiro.", "Yes, my brother is single.": "Sim, meu irmão é solteiro.", "No, I don’t have any problems.": "Não, eu não tenho nenhum problema.", "Yes, they are.": "Sim, eles são.", "My nickname is Sam.": "Meu apelido é Sam.", "No, she didn’t.": "Não, ela não.", "Yes, they closed.": "Sim, eles fecharam.", "Yes, they did.": "Sim.", "I cooked pasta.": "Eu cozinhei macarrão.", "Yes, I would like to buy a new car.": "Sim, eu gostaria de comprar um carro novo.", "My documents are on the table.": "Meus documentos estão sobre a mesa.", "I would like to learn two languages.": "Eu gostaria de aprender dois idiomas."};
+function vocabularyA2Guide(answer){return vocabularyA2AnswerGuides[answer]||'';}
+function renderVocabularyCard(){const box=document.getElementById('vocabularyPractice'),arr=vocabularyData[vocabularyGroup][currentVocabularyLesson]||[];box.classList.remove('hidden');if(!arr.length){box.innerHTML='<div class="verb-complete"><h2>Base em preparação</h2><p>Esta lição será completada com a apostila.</p><button class="verb-secondary" onclick="backVocabularyLessons()">← Voltar</button></div>';return}const s=ensureVocabularyState(vocabularyGroup,currentVocabularyLesson);if(s.pos>=s.order.length){box.innerHTML=`<div class="verb-complete"><h2>Lição concluída</h2><div class="big">${s.correct} acertos</div><p>${s.wrong} erros durante a rodada.</p><div class="verb-complete-actions"><button class="verb-secondary" onclick="restartVocabularyLesson()">↻ Nova rodada aleatória</button><button class="verb-secondary" onclick="backVocabularyLessons()">← Lições</button></div></div>`;updateVocabularyProgress();return}const idx=s.order[s.pos],item=arr[idx],prompt=item[0],answer=item[1];const shown=vocabularyGroup==='A2'?textWithVocabulary(prompt):escapeHtml(prompt);box.innerHTML=`<div class="verb-card"><div class="verb-card-top"><div class="verb-kicker">Grupo ${vocabularyGroup} · Lição ${currentVocabularyLesson}</div><div class="verb-card-count">${s.pos+1} / ${arr.length}</div></div><div class="vocab-card-question">${shown}</div>${vocabularyGroup==='A2'?`<div class="vocab-support">Toque ou clique em uma palavra da pergunta para ver a tradução.</div><div class="vocab-answer-guide"><div class="vocab-guide-label">RESPOSTA EM PORTUGUÊS</div><div class="vocab-guide-text">${escapeHtml(vocabularyA2Guide(answer))}</div><div class="vocab-guide-hint">Agora escreva essa resposta em inglês.</div></div>`:'<div class="vocab-support">Traduza a frase completa para o inglês.</div>'}<input id="vocabularyAnswer" class="vocab-answer-input" autocomplete="off" spellcheck="false" placeholder="${vocabularyGroup==='A1'?'Digite em inglês...':'Escreva a resposta em inglês...'}"><div id="vocabularyFeedback" class="verb-feedback"></div><div class="vv-actions"><button type="button" class="btn btn-primary" id="checkVocabularyBtn">✓ Corrigir</button><button class="verb-secondary" onclick="backVocabularyLessons()">← Lições</button></div></div>`;bindVocabularyWords();const inp=document.getElementById('vocabularyAnswer');inp.focus();window._vocabCurrentAnswer=answer;window._vocabCurrentIndex=idx;const checkBtn=document.getElementById('checkVocabularyBtn');checkBtn.addEventListener('click',triggerVocabularyCheck);inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();triggerVocabularyCheck();}}}
 function bindVocabularyWords(){/* A tradução por toque/clique é tratada pelo listener global de .vocab-word. */}
 
 function triggerVocabularyCheck(){
