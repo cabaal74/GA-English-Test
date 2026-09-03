@@ -1718,7 +1718,12 @@ function renderGibsDictionary(q){
 }
 function openGibsDictionary(){
   const back=document.getElementById('gibsDictBackdrop'),input=document.getElementById('gibsDictInput');
-  back.classList.remove('hidden');back.setAttribute('aria-hidden','false');setTimeout(()=>input.focus(),80);
+  back.classList.remove('hidden');
+  back.setAttribute('aria-hidden','false');
+  if(input){
+    renderGibsDictionary(input.value||'');
+    setTimeout(()=>input.focus(),80);
+  }
 }
 function closeGibsDictionary(){
   const back=document.getElementById('gibsDictBackdrop');back.classList.add('hidden');back.setAttribute('aria-hidden','true');
@@ -2132,27 +2137,43 @@ function gibsKBPushUnique(a,o){
  const k=`${o.lesson||''}|${o.type||''}|${dictNormalize(o.en||'')}|${dictNormalize(o.pt||'')}`;
  if(!a.some(x=>`${x.lesson||''}|${x.type||''}|${dictNormalize(x.en||'')}|${dictNormalize(x.pt||'')}`===k))a.push(o);
 }
+function normalizeGibsKBType(t){
+  const n=String(t||'').toLowerCase();
+  if(n==='verb'||n==='verbs')return 'Verbs';
+  if(n==='vocabulary'||n==='word'||n==='words')return 'Vocabulary';
+  if(n==='expression'||n==='expressions')return 'Expressions';
+  if(n==='grammar')return 'Grammar';
+  if(n==='sentence'||n==='sentences'||n==='phrase'||n==='phrases')return 'Sentences';
+  if(n==='questions & answers'||n==='question & answer'||n==='qa'||n==='q&a')return 'Questions & Answers';
+  return t||'Vocabulary';
+}
 function buildGibsIntegratedKnowledgeBase(){
- const a=Array.isArray(gibsKnowledgeBase)?gibsKnowledgeBase.slice():[];
- if(typeof vocabularyData!=='undefined'&&vocabularyData){
-  Object.keys(vocabularyData).forEach(lesson=>(vocabularyData[lesson]||[]).forEach(r=>{
-   const pt=gibsKBText(r.pt||r.portuguese||r.promptPt),en=gibsKBText(r.en||r.answer||r.english);
-   if(pt&&en)gibsKBPushUnique(a,{lesson:+lesson,type:'Sentences',en,pt,source:'Vocabulário A1',exampleEN:en,examplePT:pt});
-   const q=gibsKBText(r.question||r.q);
-   if(q){
-    const guide=(typeof vocabularyA2PortugueseGuides!=='undefined'&&vocabularyA2PortugueseGuides[q])||pt;
-    const fallback=gibsKBText(r.answer||r.a||r.en);
-    const opts=typeof vocabularyA2ValidAnswers==='function'?vocabularyA2ValidAnswers(q,fallback):[fallback];
-    gibsKBPushUnique(a,{lesson:+lesson,type:'Questions & Answers',en:q,pt:guide,source:'Vocabulário A2',
-      questionEN:q,answerPT:guide,answerFullEN:opts[0]||fallback,answerShortEN:opts[1]||'',exampleEN:q,examplePT:guide});
-   }
-  }));
- }
- if(typeof gibsStudyBase!=='undefined'&&Array.isArray(gibsStudyBase))gibsStudyBase.forEach(r=>gibsKBPushUnique(a,{
-  lesson:r.lesson,type:r.type||'Vocabulary',en:r.en,pt:r.pt,source:'Base didática',
-  exampleEN:r.example||'',examplePT:r.examplePt||'',related:r.related||''
- }));
- return a;
+  const a=[];
+  try{
+    if(Array.isArray(gibsKnowledgeBase)){
+      gibsKnowledgeBase.forEach(r=>gibsKBPushUnique(a,Object.assign({},r,{type:normalizeGibsKBType(r.type)})));
+    }
+  }catch(e){console.error('KB principal:',e);}
+
+  try{
+    if(typeof gibsStudyBase!=='undefined'&&Array.isArray(gibsStudyBase)){
+      gibsStudyBase.forEach(r=>gibsKBPushUnique(a,{
+        lesson:r.lesson,type:normalizeGibsKBType(r.type),en:r.en,pt:r.pt,source:'Base didática',
+        exampleEN:r.example||'',examplePT:r.examplePt||'',related:r.related||''
+      }));
+    }
+  }catch(e){console.error('Base didática:',e);}
+
+  // Preserve legacy dictionary as a fallback/search supplement.
+  try{
+    if(typeof gibsDictionary!=='undefined'&&Array.isArray(gibsDictionary)){
+      gibsDictionary.forEach(r=>gibsKBPushUnique(a,{
+        lesson:r.lesson||'',type:'Vocabulary',en:r.en||'',pt:r.pt||'',source:'Dicionário legado'
+      }));
+    }
+  }catch(e){console.error('Dicionário legado:',e);}
+
+  return a;
 }
 const gibsIntegratedKnowledgeBase=buildGibsIntegratedKnowledgeBase();
 function gibsKBTypeLabel(t){return ({Vocabulary:'Palavra',Verbs:'Verbo',Expressions:'Expressão',Grammar:'Grammar',Sentences:'Frase','Questions & Answers':'Pergunta & Resposta'})[t]||t||'Conteúdo'}
@@ -2193,6 +2214,48 @@ function setupGibsHelpFilters(){
  });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupGibsHelpFilters,{once:true});else setupGibsHelpFilters();
+
+
+
+function bindGibsDictionarySearch(){
+  const input=document.getElementById('gibsDictInput');
+  if(!input)return;
+
+  const run=()=> {
+    try{
+      renderGibsDictionary(input.value);
+    }catch(err){
+      console.error('Gibs Dictionary render error:',err);
+      const box=document.getElementById('gibsDictResults');
+      if(box) box.innerHTML='<div class="gibs-dict-empty">Erro ao consultar a base. Atualize a página e tente novamente.</div>';
+    }
+  };
+
+  input.oninput=run;
+  input.onsearch=run;
+  input.onkeyup=run;
+
+  // Render current typed value when dictionary opens/reloads.
+  if(input.value) run();
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',bindGibsDictionarySearch,{once:true});
+}else{
+  bindGibsDictionarySearch();
+}
+
+
+
+(function ensureGibsIntegratedKB(){
+  try{
+    if(typeof gibsIntegratedKnowledgeBase!=='undefined' && gibsIntegratedKnowledgeBase.length===0 && typeof gibsDictionary!=='undefined'){
+      gibsDictionary.forEach(r=>gibsIntegratedKnowledgeBase.push({
+        lesson:r.lesson||'',type:'Vocabulary',en:r.en||'',pt:r.pt||'',source:'Dicionário legado'
+      }));
+    }
+  }catch(e){console.error(e);}
+})();
 
 </script>
 
