@@ -505,6 +505,7 @@ body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.progress
 .mobile-bottom-bar .bottom-bar-item *{pointer-events:none!important}
 #bottomProgressRestoreInput{display:none!important}
 
+.gibs-help-filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;margin-bottom:4px;scrollbar-width:none}.gibs-help-filters::-webkit-scrollbar{display:none}.gibs-help-filters button{flex:0 0 auto;border:1px solid rgba(120,160,210,.35);background:rgba(20,55,90,.08);color:inherit;border-radius:999px;padding:7px 10px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.gibs-help-filters button.active{background:#153e68;color:#fff;border-color:#153e68}.gibs-dict-item .gibs-study-label{margin-top:9px}
 </style>
 </head>
 
@@ -655,7 +656,8 @@ body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.progress
   <section class="gibs-dict-panel" role="dialog" aria-modal="true" aria-labelledby="gibsDictTitle">
     <div class="gibs-dict-head"><div><strong id="gibsDictTitle">📖 Dicionário - Gibs Academy</strong><div style="font-size:11px;opacity:.78;margin-top:2px">Vocabulário das 31 lições</div></div><button type="button" class="gibs-dict-close" id="gibsDictClose" aria-label="Fechar">×</button></div>
     <div class="gibs-dict-search"><input id="gibsDictInput" class="gibs-dict-input" type="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Digite em português ou inglês..."><div class="gibs-dict-help">Ex.: café → coffee · coffee → café</div></div>
-    <div class="gibs-dict-results" id="gibsDictResults"><div class="gibs-dict-empty">Digite uma palavra para pesquisar.</div></div>
+    <div class="gibs-help-filters" id="gibsHelpFilters"><button type="button" data-kbfilter="all" class="active">Todos</button><button type="button" data-kbfilter="Vocabulary">Palavras</button><button type="button" data-kbfilter="Verbs">Verbos</button><button type="button" data-kbfilter="Expressions">Expressões</button><button type="button" data-kbfilter="Grammar">Grammar</button><button type="button" data-kbfilter="Sentences">Frases</button></div>
+<div class="gibs-dict-results" id="gibsDictResults"><div class="gibs-dict-empty">Digite uma palavra para pesquisar.</div></div>
   </section>
 </div>
 <script>
@@ -2121,6 +2123,76 @@ function hasValidSavedProgress(){
 
 
 
+
+
+
+let gibsHelpFilter='all';
+function gibsKBText(v){return String(v==null?'':v)}
+function gibsKBPushUnique(a,o){
+ const k=`${o.lesson||''}|${o.type||''}|${dictNormalize(o.en||'')}|${dictNormalize(o.pt||'')}`;
+ if(!a.some(x=>`${x.lesson||''}|${x.type||''}|${dictNormalize(x.en||'')}|${dictNormalize(x.pt||'')}`===k))a.push(o);
+}
+function buildGibsIntegratedKnowledgeBase(){
+ const a=Array.isArray(gibsKnowledgeBase)?gibsKnowledgeBase.slice():[];
+ if(typeof vocabularyData!=='undefined'&&vocabularyData){
+  Object.keys(vocabularyData).forEach(lesson=>(vocabularyData[lesson]||[]).forEach(r=>{
+   const pt=gibsKBText(r.pt||r.portuguese||r.promptPt),en=gibsKBText(r.en||r.answer||r.english);
+   if(pt&&en)gibsKBPushUnique(a,{lesson:+lesson,type:'Sentences',en,pt,source:'Vocabulário A1',exampleEN:en,examplePT:pt});
+   const q=gibsKBText(r.question||r.q);
+   if(q){
+    const guide=(typeof vocabularyA2PortugueseGuides!=='undefined'&&vocabularyA2PortugueseGuides[q])||pt;
+    const fallback=gibsKBText(r.answer||r.a||r.en);
+    const opts=typeof vocabularyA2ValidAnswers==='function'?vocabularyA2ValidAnswers(q,fallback):[fallback];
+    gibsKBPushUnique(a,{lesson:+lesson,type:'Questions & Answers',en:q,pt:guide,source:'Vocabulário A2',
+      questionEN:q,answerPT:guide,answerFullEN:opts[0]||fallback,answerShortEN:opts[1]||'',exampleEN:q,examplePT:guide});
+   }
+  }));
+ }
+ if(typeof gibsStudyBase!=='undefined'&&Array.isArray(gibsStudyBase))gibsStudyBase.forEach(r=>gibsKBPushUnique(a,{
+  lesson:r.lesson,type:r.type||'Vocabulary',en:r.en,pt:r.pt,source:'Base didática',
+  exampleEN:r.example||'',examplePT:r.examplePt||'',related:r.related||''
+ }));
+ return a;
+}
+const gibsIntegratedKnowledgeBase=buildGibsIntegratedKnowledgeBase();
+function gibsKBTypeLabel(t){return ({Vocabulary:'Palavra',Verbs:'Verbo',Expressions:'Expressão',Grammar:'Grammar',Sentences:'Frase','Questions & Answers':'Pergunta & Resposta'})[t]||t||'Conteúdo'}
+function gibsKBFilterOK(x){return gibsHelpFilter==='all'||(gibsHelpFilter==='Sentences'?(x.type==='Sentences'||x.type==='Questions & Answers'):x.type===gibsHelpFilter)}
+function searchGibsDictionary(q){
+ const n=dictNormalize(q);if(!n)return[];
+ return gibsIntegratedKnowledgeBase.map(item=>{
+  const f=[item.en,item.pt,item.exampleEN,item.examplePT,item.related,item.questionEN,item.answerPT,item.answerFullEN,item.answerShortEN,item.grammarPattern,item.explanationPT].map(dictNormalize);
+  let score=99;if(f.some(v=>v===n))score=0;else if(f.some(v=>v.startsWith(n)))score=1;else if(f.some(v=>v.split(/\s+/).includes(n)))score=2;else if(f.some(v=>v.includes(n)))score=3;
+  return {item,score};
+ }).filter(x=>x.score<99&&gibsKBFilterOK(x.item)).sort((a,b)=>a.score-b.score||(+a.item.lesson||999)-(+b.item.lesson||999)).slice(0,30).map(x=>x.item);
+}
+function renderGibsDictionary(q){
+ const box=document.getElementById('gibsDictResults'),results=searchGibsDictionary(q);if(!box)return;
+ if(!String(q||'').trim()){box.innerHTML='<div class="gibs-dict-empty">Pesquise palavras, verbos, expressões, grammar, frases e perguntas das 31 lições.</div>';return}
+ if(!results.length){box.innerHTML='<div class="gibs-dict-empty">Nenhum conteúdo encontrado neste filtro.</div>';return}
+ box.innerHTML=results.map(r=>{
+  let extra='';
+  if(r.type==='Questions & Answers'){
+   if(r.answerPT)extra+=`<div class="gibs-study-label">Resposta em português</div><div class="gibs-study-example-pt">${escapeHtml(r.answerPT)}</div>`;
+   if(r.answerFullEN)extra+=`<div class="gibs-study-label">Resposta completa</div><div class="gibs-dict-example">${escapeHtml(r.answerFullEN)}</div>`;
+   if(r.answerShortEN&&dictNormalize(r.answerShortEN)!==dictNormalize(r.answerFullEN))extra+=`<div class="gibs-study-label">Resposta curta</div><div class="gibs-dict-example">${escapeHtml(r.answerShortEN)}</div>`;
+  }else{
+   if(r.grammarPattern)extra+=`<div class="gibs-study-label">Estrutura</div><div class="gibs-dict-example">${escapeHtml(r.grammarPattern)}</div>`;
+   if(r.explanationPT)extra+=`<div class="gibs-study-example-pt">${escapeHtml(r.explanationPT)}</div>`;
+   if(r.exampleEN&&dictNormalize(r.exampleEN)!==dictNormalize(r.en))extra+=`<div class="gibs-study-label">Exemplo</div><div class="gibs-dict-example">${escapeHtml(r.exampleEN)}</div>`;
+   if(r.examplePT)extra+=`<div class="gibs-study-example-pt">${escapeHtml(r.examplePT)}</div>`;
+  }
+  if(r.related)extra+=`<div class="gibs-study-related"><strong>Veja também:</strong> ${escapeHtml(String(r.related))}</div>`;
+  return `<article class="gibs-dict-item"><div class="gibs-dict-row"><div style="min-width:0;flex:1"><div class="gibs-study-meta">${escapeHtml(gibsKBTypeLabel(r.type))} · ${r.lesson?`Lição ${escapeHtml(String(r.lesson))}`:'Gibs Academy'}</div><div class="gibs-dict-en">${escapeHtml(r.en||'')}</div>${r.pt?`<div class="gibs-dict-pt">${escapeHtml(r.pt)}</div>`:''}${extra}</div><button type="button" class="gibs-dict-speak" data-speak="${escapeHtml((r.en||'').replace(/^to\s+/i,''))}">🔊</button></div></article>`;
+ }).join('');
+ box.querySelectorAll('[data-speak]').forEach(b=>b.onclick=()=>{if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(b.dataset.speak);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)});
+}
+function setupGibsHelpFilters(){
+ document.querySelectorAll('#gibsHelpFilters [data-kbfilter]').forEach(btn=>btn.onclick=()=>{
+  gibsHelpFilter=btn.dataset.kbfilter;document.querySelectorAll('#gibsHelpFilters [data-kbfilter]').forEach(b=>b.classList.toggle('active',b===btn));
+  const i=document.getElementById('gibsDictInput');renderGibsDictionary(i?i.value:'');
+ });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupGibsHelpFilters,{once:true});else setupGibsHelpFilters();
 
 </script>
 
