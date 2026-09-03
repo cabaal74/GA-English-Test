@@ -435,26 +435,10 @@ body.giba-open .giba-flag-btn{
 
 .vocab-guide-hint{font-weight:700}
 
-
-/* Vocabulário — revelar resposta após 3 erros */
-.vocab-revealed-answer{
-  margin-top:8px;
-  padding:10px 12px;
-  border-radius:10px;
-  background:#fff;
-  border:1px solid #efb6b6;
-  color:#9b1c1c;
-  font-size:18px;
-  font-weight:900;
-  line-height:1.35;
-}
-.vocab-reveal-note,
-.vocab-attempt-note{
-  margin-top:7px;
-  font-size:12px;
-  color:#8b5a5a;
-  font-weight:700;
-}
+/* Vocabulário — revelar resposta após 3 erros sem alterar a navegação */
+.vocab-reveal-title{margin-top:10px;font-size:12px;font-weight:900;color:#9b1c1c;text-transform:uppercase;letter-spacing:.06em}
+.vocab-revealed-answer{margin-top:6px;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #efb6b6;color:#9b1c1c;font-size:18px;font-weight:900;line-height:1.35}
+.vocab-reveal-note,.vocab-attempt-note{margin-top:7px;font-size:12px;color:#8b5a5a;font-weight:700}
 
 </style>
 </head>
@@ -1819,49 +1803,56 @@ function triggerVocabularyCheck(){
 }
 
 function checkVocabularyAnswer(correct,idx){
-  const inp=document.getElementById('vocabularyAnswer');
-  const fb=document.getElementById('vocabularyFeedback');
-  if(!inp||!fb)return;
-
-  const got=normalizeTranslation(inp.value);
-  if(!got){
-    fb.className='verb-feedback show bad';
-    fb.textContent='Digite uma resposta antes de corrigir.';
-    inp.focus();
-    return;
-  }
-
-  const st=ensureVocabularyState(vocabularyGroup,currentVocabularyLesson);
-  st.errors = st.errors || {};
+  const inp=document.getElementById('vocabularyAnswer'),fb=document.getElementById('vocabularyFeedback'),s=ensureVocabularyState(vocabularyGroup,currentVocabularyLesson),got=normalizeTranslation(inp.value);
+  if(!got){fb.className='verb-feedback show bad';fb.textContent='Digite uma resposta antes de corrigir.';inp.focus();return;}
+  s.errors=s.errors||{};
   const key=String(idx);
-
   if(got===normalizeTranslation(correct)){
-    st.errors[key]=0;
-    if(!st.done.includes(idx))st.done.push(idx);
+    s.errors[key]=0;
     fb.className='verb-feedback show good';
-    fb.innerHTML='✓ Correto!';
-    scheduleSave();
+    fb.innerHTML=`✓ Correto.<div class="vocab-correct-answer">${escapeHtml(correct)}</div>`;
+    s.correct++;
+    if(!s.done.includes(idx))s.done.push(idx);
+    s.pos++;
     updateVocabularyProgress();
-    setTimeout(()=>{
-      advanceVocabularyQuestion();
-    },650);
+    scheduleSave();
+    setTimeout(renderVocabularyCard,650);
     return;
   }
-
-  st.errors[key]=(st.errors[key]||0)+1;
-  const attempts=st.errors[key];
-
+  s.wrong++;
+  s.errors[key]=(s.errors[key]||0)+1;
+  const attempts=s.errors[key];
   fb.className='verb-feedback show bad';
-
   if(attempts>=3){
-    fb.innerHTML=`<div><strong>Resposta correta:</strong></div><div class="vocab-revealed-answer">${escapeHtml(correct)}</div><div class="vocab-reveal-note">Revise a estrutura e tente escrevê-la novamente.</div>`;
+    fb.innerHTML=`Ainda não.<div class="vocab-reveal-title">Resposta correta:</div><div class="vocab-revealed-answer">${escapeHtml(correct)}</div><div class="vocab-reveal-note">Revise a estrutura e tente escrevê-la novamente.</div>`;
   }else{
     const remaining=3-attempts;
-    fb.innerHTML=`<div>Ainda não. Tente novamente.</div><div class="vocab-attempt-note">Após ${remaining} ${remaining===1?'tentativa':'tentativas'}, a resposta correta será mostrada.</div>`;
+    fb.innerHTML=`Ainda não. Tente novamente.<div class="vocab-attempt-note">A resposta correta aparecerá após ${remaining} ${remaining===1?'nova tentativa':'novas tentativas'} incorreta${remaining===1?'':'s'}.</div>`;
   }
-
+  updateVocabularyProgress();
   scheduleSave();
-  inp.focus();
+  inp.select();
+}
+function backVocabularyLessons(){document.getElementById('vocabularyPractice').classList.add('hidden');document.getElementById('vocabularyLessonGrid').classList.remove('hidden');renderVocabularyLessons()}
+function restartVocabularyLesson(){const k=vocabKey(vocabularyGroup,currentVocabularyLesson),n=(vocabularyData[vocabularyGroup][currentVocabularyLesson]||[]).length;vocabularyState[k]={n,order:shuffledArray(n),pos:0,done:[],correct:0,wrong:0,answer:''};renderVocabularyCard()}
+function updateVocabularyProgress(){[['A1',VOCAB_A1_LESSONS,320],['A2',VOCAB_A2_LESSONS,300]].forEach(([g,ls,target])=>{let done=0;ls.forEach(l=>{const s=ensureVocabularyState(g,l);done+=new Set(s.done).size});const pct=Math.round(done/target*100);document.getElementById('vocab'+g+'Value').textContent=pct+'%';document.getElementById('vocab'+g+'Bar').style.width=pct+'%';document.getElementById('vocab'+g+'Meta').textContent=done+' / '+target});if(document.getElementById('homeView'))updateHomeDashboard()}
+function showVocabulary(){currentView='vocabulary';['homeView','questionsView','translationView','unscrambleView','listeningView','verbsView','verbVocabView','verbFormsView'].forEach(id=>document.getElementById(id).classList.add('hidden'));['questionsTab','translateTab','unscrambleTab','listeningTab','verbsTab','verbVocabTab','verbFormsTab'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('vocabularyView').classList.remove('hidden');document.getElementById('vocabularyTab').classList.add('active');document.getElementById('testDashboard').classList.add('hidden');document.getElementById('verbDashboard').classList.add('hidden');document.getElementById('topProgress').classList.add('hidden');document.getElementById('vocabularyGroupsNav').classList.remove('hidden');document.getElementById('vocabularyHeroChip').textContent=`Grupo ${vocabularyGroup}`;renderVocabularyLessons();closeMenu()}
+
+const oldDictFab=document.getElementById('gibsDictFab');
+if(oldDictFab)oldDictFab.addEventListener('click',openGibsDictionary);
+document.getElementById('gibsDictClose').addEventListener('click',closeGibsDictionary);
+document.getElementById('gibsDictInput').addEventListener('input',e=>renderGibsDictionary(e.target.value));
+document.getElementById('gibsDictBackdrop').addEventListener('click',e=>{if(e.target.id==='gibsDictBackdrop')closeGibsDictionary();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('gibsDictBackdrop').classList.contains('hidden'))closeGibsDictionary();});
+
+document.getElementById('homeTab').addEventListener('click',()=>{showHome();scheduleSave();});
+const homeIconBtn=document.getElementById('homeIconBtn');if(homeIconBtn)homeIconBtn.addEventListener('click',()=>{showHome();scheduleSave();});
+
+function bindHomeCard(id,fn){
+  const el=document.getElementById(id);if(!el)return;
+  const go=()=>{fn();scheduleSave();};
+  el.addEventListener('click',go);
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
 }
 bindHomeCard('homeDashQuestions',()=>{showQuestions();renderPage();});
 bindHomeCard('homeDashTranslation',()=>showTranslation());
