@@ -477,6 +477,15 @@ body.giba-open .giba-flag-btn{
   .progress-backup-box{grid-template-columns:1fr}
 }
 
+
+/* Barra inferior fixa — padrão mobile Gibs Academy */
+.mobile-bottom-bar{position:fixed;left:0;right:0;bottom:0;z-index:10000;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(7,25,44,.97);border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -8px 24px rgba(0,0,0,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.bottom-bar-item{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:#d9e6f5;min-height:54px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.bottom-bar-item:active{background:rgba(255,255,255,.08);transform:scale(.98)}
+.bottom-bar-icon{font-size:22px;line-height:1}.bottom-bar-label{font-size:10px;line-height:1;font-weight:800;letter-spacing:.02em}.bottom-bar-home{color:#fff}.bottom-bar-home .bottom-bar-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#1f6ed4;box-shadow:0 4px 12px rgba(31,110,212,.35)}
+body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.progress-backup-floating,#dictionaryFab,.dictionary-fab,.floating-dictionary,.floating-assistant-trigger{display:none!important}
+@media(min-width:900px){.mobile-bottom-bar{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);border:1px solid rgba(255,255,255,.12);border-bottom:0;border-radius:18px 18px 0 0}}
+
 </style>
 </head>
 
@@ -2062,13 +2071,23 @@ function hasValidSavedProgress(){
   }
 }
 
+
+(function setupBottomBar(){
+  const byId=id=>document.getElementById(id);
+  const backup=byId('bottomBackupBtn'); if(backup) backup.addEventListener('click',()=>{if(typeof exportProgressBackup==='function') exportProgressBackup();});
+  const restore=byId('bottomRestoreBtn'); if(restore) restore.addEventListener('click',()=>{const input=byId('progressRestoreInput'); if(input) input.click();});
+  const home=byId('bottomHomeBtn'); if(home) home.addEventListener('click',()=>{if(typeof showHome==='function'){showHome(); if(typeof scheduleSave==='function') scheduleSave(); window.scrollTo({top:0,behavior:'smooth'}); return;} const oldHome=byId('homeTab')||byId('homeIconBtn'); if(oldHome) oldHome.click();});
+  const dictionary=byId('bottomDictionaryBtn'); if(dictionary) dictionary.addEventListener('click',()=>{const c=[byId('dictionaryFab'),byId('assistantFab'),byId('dictionaryButton'),document.querySelector('[data-open-dictionary]'),document.querySelector('.dictionary-fab'),document.querySelector('.floating-dictionary')].filter(Boolean); if(c.length){c[0].click();return;} if(typeof openDictionary==='function') openDictionary(); else if(typeof toggleDictionary==='function') toggleDictionary(); else if(typeof openAssistant==='function') openAssistant(); else if(typeof toggleAssistant==='function') toggleAssistant();});
+})();
 </script>
 
-<div class="progress-backup-floating">
-  <button type="button" onclick="exportProgressBackup()" title="Backup do progresso">💾</button>
-  <button type="button" onclick="document.getElementById('progressRestoreInput').click()" title="Restaurar progresso">↥</button>
-  <input id="progressRestoreInput" type="file" accept="application/json,.json" style="display:none" onchange="importProgressBackup(event)">
-</div>
+
+<nav class="mobile-bottom-bar" aria-label="Ações rápidas">
+  <button type="button" class="bottom-bar-item" id="bottomBackupBtn" aria-label="Backup do progresso"><span class="bottom-bar-icon">💾</span><span class="bottom-bar-label">Backup</span></button>
+  <button type="button" class="bottom-bar-item" id="bottomRestoreBtn" aria-label="Restaurar progresso"><span class="bottom-bar-icon">⬆</span><span class="bottom-bar-label">Restaurar</span></button>
+  <button type="button" class="bottom-bar-item bottom-bar-home" id="bottomHomeBtn" aria-label="Início"><span class="bottom-bar-icon">⌂</span><span class="bottom-bar-label">Início</span></button>
+  <button type="button" class="bottom-bar-item" id="bottomDictionaryBtn" aria-label="Dicionário"><span class="bottom-bar-icon">🇬🇧</span><span class="bottom-bar-label">Dicionário</span></button>
+</nav>
 
 </body>
 </html>
