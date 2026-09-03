@@ -506,6 +506,16 @@ body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.progress
 #bottomProgressRestoreInput{display:none!important}
 
 .gibs-help-filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;margin-bottom:4px;scrollbar-width:none}.gibs-help-filters::-webkit-scrollbar{display:none}.gibs-help-filters button{flex:0 0 auto;border:1px solid rgba(120,160,210,.35);background:rgba(20,55,90,.08);color:inherit;border-radius:999px;padding:7px 10px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.gibs-help-filters button.active{background:#153e68;color:#fff;border-color:#153e68}.gibs-dict-item .gibs-study-label{margin-top:9px}
+
+.gibs-help-filters{position:relative;z-index:20}
+.gibs-help-filters button{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+  z-index:21;
+}
+
 </style>
 </head>
 
@@ -656,7 +666,7 @@ body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.progress
   <section class="gibs-dict-panel" role="dialog" aria-modal="true" aria-labelledby="gibsDictTitle">
     <div class="gibs-dict-head"><div><strong id="gibsDictTitle">📖 Dicionário - Gibs Academy</strong><div style="font-size:11px;opacity:.78;margin-top:2px">Vocabulário das 31 lições</div></div><button type="button" class="gibs-dict-close" id="gibsDictClose" aria-label="Fechar">×</button></div>
     <div class="gibs-dict-search"><input id="gibsDictInput" class="gibs-dict-input" type="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Digite em português ou inglês..."><div class="gibs-dict-help">Ex.: café → coffee · coffee → café</div></div>
-    <div class="gibs-help-filters" id="gibsHelpFilters"><button type="button" data-kbfilter="all" class="active">Todos</button><button type="button" data-kbfilter="Vocabulary">Palavras</button><button type="button" data-kbfilter="Verbs">Verbos</button><button type="button" data-kbfilter="Expressions">Expressões</button><button type="button" data-kbfilter="Grammar">Grammar</button><button type="button" data-kbfilter="Sentences">Frases</button></div>
+    <div class="gibs-help-filters" id="gibsHelpFilters"><button type="button" data-kbfilter="all" class="active" onclick="setGibsHelpFilter('all',this)">Todos</button><button type="button" data-kbfilter="Vocabulary" onclick="setGibsHelpFilter('Vocabulary',this)">Palavras</button><button type="button" data-kbfilter="Verbs" onclick="setGibsHelpFilter('Verbs',this)">Verbos</button><button type="button" data-kbfilter="Expressions" onclick="setGibsHelpFilter('Expressions',this)">Expressões</button><button type="button" data-kbfilter="Grammar" onclick="setGibsHelpFilter('Grammar',this)">Grammar</button><button type="button" data-kbfilter="Sentences" onclick="setGibsHelpFilter('Sentences',this)">Frases</button></div>
 <div class="gibs-dict-results" id="gibsDictResults"><div class="gibs-dict-empty">Digite uma palavra para pesquisar.</div></div>
   </section>
 </div>
@@ -2132,6 +2142,16 @@ function hasValidSavedProgress(){
 
 
 let gibsHelpFilter='all';
+
+function setGibsHelpFilter(filter,btn){
+  gibsHelpFilter=filter||'all';
+  document.querySelectorAll('#gibsHelpFilters [data-kbfilter]').forEach(function(b){
+    b.classList.toggle('active', b===btn || b.dataset.kbfilter===gibsHelpFilter);
+  });
+  var input=document.getElementById('gibsDictInput');
+  renderGibsDictionary(input ? input.value : '');
+}
+
 function gibsKBText(v){return String(v==null?'':v)}
 function gibsKBPushUnique(a,o){
  const k=`${o.lesson||''}|${o.type||''}|${dictNormalize(o.en||'')}|${dictNormalize(o.pt||'')}`;
