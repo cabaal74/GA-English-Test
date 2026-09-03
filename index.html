@@ -499,6 +499,12 @@ body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.progress
   z-index:1;
 }
 
+/* Barra inferior - clique direto e compatibilidade Safari */
+.mobile-bottom-bar{pointer-events:auto!important;-webkit-transform:translateZ(0);transform:translateZ(0)}
+.mobile-bottom-bar .bottom-bar-item{pointer-events:auto!important;user-select:none;-webkit-user-select:none}
+.mobile-bottom-bar .bottom-bar-item *{pointer-events:none!important}
+#bottomProgressRestoreInput{display:none!important}
+
 </style>
 </head>
 
@@ -2088,68 +2094,28 @@ function hasValidSavedProgress(){
 
 
 
-function setupBottomBar(){
-  const backup=document.getElementById('bottomBackupBtn');
-  const restore=document.getElementById('bottomRestoreBtn');
-  const home=document.getElementById('bottomHomeBtn');
-  const dictionary=document.getElementById('bottomDictionaryBtn');
-
-  if(backup){
-    backup.addEventListener('click',function(e){
-      e.preventDefault();
-      if(typeof exportProgressBackup==='function') exportProgressBackup();
-    });
-  }
-
-  if(restore){
-    restore.addEventListener('click',function(e){
-      e.preventDefault();
-      const input=document.getElementById('progressRestoreInput');
-      if(input) input.click();
-    });
-  }
-
-  if(home){
-    home.addEventListener('click',function(e){
-      e.preventDefault();
-      if(typeof showHome==='function'){
-        showHome();
-        if(typeof scheduleSave==='function') scheduleSave();
-        window.scrollTo({top:0,behavior:'smooth'});
-      }else{
-        const oldHome=document.getElementById('homeTab') || document.getElementById('homeIconBtn');
-        if(oldHome) oldHome.click();
-      }
-    });
-  }
-
-  if(dictionary){
-    dictionary.addEventListener('click',function(e){
-      e.preventDefault();
-      if(typeof openGibsDictionary==='function'){
-        openGibsDictionary();
-      }else{
-        const fab=document.getElementById('gibsDictFab');
-        if(fab) fab.click();
-      }
-    });
-  }
-}
-
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',setupBottomBar,{once:true});
-}else{
-  setupBottomBar();
-}
 
 </script>
 
 
 <nav class="mobile-bottom-bar" aria-label="Ações rápidas">
-  <button type="button" class="bottom-bar-item" id="bottomBackupBtn" aria-label="Backup do progresso"><span class="bottom-bar-icon">💾</span><span class="bottom-bar-label">Backup</span></button>
-  <button type="button" class="bottom-bar-item" id="bottomRestoreBtn" aria-label="Restaurar progresso"><span class="bottom-bar-icon">⬆</span><span class="bottom-bar-label">Restaurar</span></button>
-  <button type="button" class="bottom-bar-item bottom-bar-home" id="bottomHomeBtn" aria-label="Início"><span class="bottom-bar-icon">⌂</span><span class="bottom-bar-label">Início</span></button>
-  <button type="button" class="bottom-bar-item" id="bottomDictionaryBtn" aria-label="Dicionário"><span class="bottom-bar-icon">🇬🇧</span><span class="bottom-bar-label">Dicionário</span></button>
+  <button type="button" class="bottom-bar-item" id="bottomBackupBtn" aria-label="Backup do progresso" onclick="exportProgressBackup(); return false;">
+    <span class="bottom-bar-icon">💾</span><span class="bottom-bar-label">Backup</span>
+  </button>
+
+  <button type="button" class="bottom-bar-item" id="bottomRestoreBtn" aria-label="Restaurar progresso" onclick="document.getElementById('bottomProgressRestoreInput').click(); return false;">
+    <span class="bottom-bar-icon">⬆</span><span class="bottom-bar-label">Restaurar</span>
+  </button>
+
+  <button type="button" class="bottom-bar-item bottom-bar-home" id="bottomHomeBtn" aria-label="Início" onclick="showHome(); if(typeof closeMenu==='function') closeMenu(); window.scrollTo(0,0); return false;">
+    <span class="bottom-bar-icon">⌂</span><span class="bottom-bar-label">Início</span>
+  </button>
+
+  <button type="button" class="bottom-bar-item" id="bottomDictionaryBtn" aria-label="Dicionário" onclick="openGibsDictionary(); return false;">
+    <span class="bottom-bar-icon">🇬🇧</span><span class="bottom-bar-label">Dicionário</span>
+  </button>
+
+  <input id="bottomProgressRestoreInput" type="file" accept="application/json,.json" style="display:none" onchange="importProgressBackup(event)">
 </nav>
 
 </body>
