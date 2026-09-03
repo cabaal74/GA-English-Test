@@ -486,6 +486,19 @@ body.giba-open .giba-flag-btn{
 body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.progress-backup-floating,#dictionaryFab,.dictionary-fab,.floating-dictionary,.floating-assistant-trigger{display:none!important}
 @media(min-width:900px){.mobile-bottom-bar{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);border:1px solid rgba(255,255,255,.12);border-bottom:0;border-radius:18px 18px 0 0}}
 
+
+.mobile-bottom-bar,
+.mobile-bottom-bar *{
+  pointer-events:auto!important;
+}
+.mobile-bottom-bar{
+  z-index:2147483000!important;
+}
+.bottom-bar-item{
+  position:relative;
+  z-index:1;
+}
+
 </style>
 </head>
 
@@ -2072,13 +2085,63 @@ function hasValidSavedProgress(){
 }
 
 
-(function setupBottomBar(){
-  const byId=id=>document.getElementById(id);
-  const backup=byId('bottomBackupBtn'); if(backup) backup.addEventListener('click',()=>{if(typeof exportProgressBackup==='function') exportProgressBackup();});
-  const restore=byId('bottomRestoreBtn'); if(restore) restore.addEventListener('click',()=>{const input=byId('progressRestoreInput'); if(input) input.click();});
-  const home=byId('bottomHomeBtn'); if(home) home.addEventListener('click',()=>{if(typeof showHome==='function'){showHome(); if(typeof scheduleSave==='function') scheduleSave(); window.scrollTo({top:0,behavior:'smooth'}); return;} const oldHome=byId('homeTab')||byId('homeIconBtn'); if(oldHome) oldHome.click();});
-  const dictionary=byId('bottomDictionaryBtn'); if(dictionary) dictionary.addEventListener('click',()=>{const c=[byId('dictionaryFab'),byId('assistantFab'),byId('dictionaryButton'),document.querySelector('[data-open-dictionary]'),document.querySelector('.dictionary-fab'),document.querySelector('.floating-dictionary')].filter(Boolean); if(c.length){c[0].click();return;} if(typeof openDictionary==='function') openDictionary(); else if(typeof toggleDictionary==='function') toggleDictionary(); else if(typeof openAssistant==='function') openAssistant(); else if(typeof toggleAssistant==='function') toggleAssistant();});
-})();
+
+
+
+function setupBottomBar(){
+  const backup=document.getElementById('bottomBackupBtn');
+  const restore=document.getElementById('bottomRestoreBtn');
+  const home=document.getElementById('bottomHomeBtn');
+  const dictionary=document.getElementById('bottomDictionaryBtn');
+
+  if(backup){
+    backup.addEventListener('click',function(e){
+      e.preventDefault();
+      if(typeof exportProgressBackup==='function') exportProgressBackup();
+    });
+  }
+
+  if(restore){
+    restore.addEventListener('click',function(e){
+      e.preventDefault();
+      const input=document.getElementById('progressRestoreInput');
+      if(input) input.click();
+    });
+  }
+
+  if(home){
+    home.addEventListener('click',function(e){
+      e.preventDefault();
+      if(typeof showHome==='function'){
+        showHome();
+        if(typeof scheduleSave==='function') scheduleSave();
+        window.scrollTo({top:0,behavior:'smooth'});
+      }else{
+        const oldHome=document.getElementById('homeTab') || document.getElementById('homeIconBtn');
+        if(oldHome) oldHome.click();
+      }
+    });
+  }
+
+  if(dictionary){
+    dictionary.addEventListener('click',function(e){
+      e.preventDefault();
+      if(typeof openGibsDictionary==='function'){
+        openGibsDictionary();
+      }else{
+        const fab=document.getElementById('gibsDictFab');
+        if(fab) fab.click();
+      }
+    });
+  }
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',setupBottomBar,{once:true});
+}else{
+  setupBottomBar();
+}
+
 </script>
 
 
