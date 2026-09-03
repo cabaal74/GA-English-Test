@@ -205,6 +205,22 @@
   #vocabularyView > .dashboard{grid-template-columns:1fr}
 }
 
+
+/* Home — painel geral de evolução */
+.home-view{padding-bottom:24px}
+.home-section-title{font-size:18px;font-weight:900;color:#10233d;padding:20px 4px 8px}
+.home-dashboard{padding:0!important;margin:0!important;background:transparent!important}
+.home-dashboard .dash-card{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.home-dashboard .dash-card:active{transform:scale(.985)}
+@media(max-width:560px){
+  .home-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .home-dashboard .dash-card{min-width:0;padding:12px 10px}
+  .home-dashboard .dash-icon{font-size:28px}
+  .home-dashboard .dash-label{font-size:11px}
+  .home-dashboard .dash-value{font-size:21px}
+}
+@media(max-width:350px){.home-dashboard{grid-template-columns:1fr!important}}
+
 </style>
 </head>
 
@@ -269,6 +285,36 @@
         <div class="dash-card purple" id="dashVerbForms" role="button" tabindex="0" aria-label="Abrir Formas Verbais"><div class="dash-icon">V5</div><div class="dash-copy"><div class="dash-label">Formas Verbais</div><div class="dash-value" id="dashVFValue">0%</div><div class="dash-progress"><span id="dashVFBar"></span></div><div class="dash-pct" id="dashVFPct">0%</div></div></div>
         <div class="dash-card blue" id="dashVerbSentences" role="button" tabindex="0" aria-label="Abrir Verbos em Frases"><div class="dash-icon">V</div><div class="dash-copy"><div class="dash-label">Verbos em Frases</div><div class="dash-value" id="dashVSValue">0%</div><div class="dash-progress"><span id="dashVSBar"></span></div><div class="dash-pct" id="dashVSPct">0%</div></div></div>
       </div>
+      
+      <section id="homeView" class="view-panel home-view hidden">
+        <div class="hero home-hero">
+          <h1>Gibs Academy — Meu Progresso</h1>
+          <span class="page-chip">HOME</span>
+          <p>ⓘ &nbsp; Acompanhe sua evolução geral e toque em qualquer card para continuar seus estudos.</p>
+        </div>
+
+        <div class="home-section-title">Testes</div>
+        <div class="dashboard home-dashboard" id="homeTestDashboard">
+          <div class="dash-card blue" id="homeDashQuestions" role="button" tabindex="0"><div class="dash-icon">?</div><div class="dash-copy"><div class="dash-label">Perguntas (MCQ)</div><div class="dash-value" id="homeQValue">0 / 100</div><div class="dash-progress"><span id="homeQBar"></span></div><div class="dash-pct" id="homeQPct">0%</div></div></div>
+          <div class="dash-card green" id="homeDashTranslation" role="button" tabindex="0"><div class="dash-icon">A↔</div><div class="dash-copy"><div class="dash-label">Traduza (PT → EN)</div><div class="dash-value" id="homeTValue">0 / 100</div><div class="dash-progress"><span id="homeTBar"></span></div><div class="dash-pct" id="homeTPct">0%</div></div></div>
+          <div class="dash-card purple" id="homeDashUnscramble" role="button" tabindex="0"><div class="dash-icon">↝</div><div class="dash-copy"><div class="dash-label">Unscramble</div><div class="dash-value" id="homeUValue">0 / 100</div><div class="dash-progress"><span id="homeUBar"></span></div><div class="dash-pct" id="homeUPct">0%</div></div></div>
+          <div class="dash-card orange" id="homeDashListening" role="button" tabindex="0"><div class="dash-icon">🔊</div><div class="dash-copy"><div class="dash-label">Listening Unscramble</div><div class="dash-value" id="homeLValue">0 / 100</div><div class="dash-progress"><span id="homeLBar"></span></div><div class="dash-pct" id="homeLPct">0%</div></div></div>
+        </div>
+
+        <div class="home-section-title">Vocabulário</div>
+        <div class="dashboard home-dashboard">
+          <div class="dash-card blue" id="homeVocabA1" role="button" tabindex="0"><div class="dash-icon">A1</div><div class="dash-copy"><div class="dash-label">Grupo A1 · Lições 1–29</div><div class="dash-value" id="homeA1Value">0%</div><div class="dash-progress"><span id="homeA1Bar"></span></div><div class="dash-pct" id="homeA1Meta">0 / 320</div></div></div>
+          <div class="dash-card green" id="homeVocabA2" role="button" tabindex="0"><div class="dash-icon">A2</div><div class="dash-copy"><div class="dash-label">Grupo A2 · Lições 31–59</div><div class="dash-value" id="homeA2Value">0%</div><div class="dash-progress"><span id="homeA2Bar"></span></div><div class="dash-pct" id="homeA2Meta">0 / 300</div></div></div>
+        </div>
+
+        <div class="home-section-title">Verbos</div>
+        <div class="dashboard home-dashboard" id="homeVerbDashboard">
+          <div class="dash-card green" id="homeDashVerbVocab" role="button" tabindex="0"><div class="dash-icon">V↔</div><div class="dash-copy"><div class="dash-label">Treino de Verbos</div><div class="dash-value" id="homeVVValue">0 / 45</div><div class="dash-progress"><span id="homeVVBar"></span></div><div class="dash-pct" id="homeVVPct">0%</div></div></div>
+          <div class="dash-card purple" id="homeDashVerbForms" role="button" tabindex="0"><div class="dash-icon">V5</div><div class="dash-copy"><div class="dash-label">Formas Verbais</div><div class="dash-value" id="homeVFValue">0%</div><div class="dash-progress"><span id="homeVFBar"></span></div><div class="dash-pct" id="homeVFPct">0%</div></div></div>
+          <div class="dash-card blue" id="homeDashVerbSentences" role="button" tabindex="0"><div class="dash-icon">V</div><div class="dash-copy"><div class="dash-label">Verbos em Frases</div><div class="dash-value" id="homeVSValue">0%</div><div class="dash-progress"><span id="homeVSBar"></span></div><div class="dash-pct" id="homeVSPct">0%</div></div></div>
+        </div>
+      </section>
+
       <section id="vocabularyView" class="view-panel verb-view hidden">
         <div class="hero"><h1>Vocabulário – Gibs Academy</h1><span class="page-chip" id="vocabularyHeroChip">A1 + A2</span><p>ⓘ &nbsp; A1: leia em português e escreva em inglês. A2: leia a pergunta em inglês e responda em inglês. Toque ou clique nas palavras em inglês para consultar a tradução.</p></div>
         <div class="dashboard" style="padding:18px;margin:0;background:#f7f9fc">
@@ -518,7 +564,7 @@ let saveTimer=null;
 function saveProgress(){
   try{
     const state={
-      version:5,answers:[...answers],gradedPages:[...gradedPages],translationAnswers:[...translationAnswers],gradedTranslationPages:[...gradedTranslationPages],unscrambleAnswers:unscrambleAnswers.map(x=>[...x]),gradedUnscramblePages:[...gradedUnscramblePages],listeningAnswers:listeningAnswers.map(x=>[...x]),gradedListeningPages:[...gradedListeningPages],currentPage,currentTranslationPage,currentUnscramblePage,currentListeningPage,currentVerbLesson,verbRunMode,verbState:JSON.parse(JSON.stringify(verbState)),currentVerbVocabLesson,verbVocabMode,verbVocabState:JSON.parse(JSON.stringify(verbVocabState)),verbVocabErrorCounts:JSON.parse(JSON.stringify(verbVocabErrorCounts)),currentVerbFormsLesson,verbFormsState:JSON.parse(JSON.stringify(verbFormsState)),verbFormsErrorCounts:JSON.parse(JSON.stringify(verbFormsErrorCounts)),currentView,savedAt:new Date().toISOString()
+      version:5,answers:[...answers],gradedPages:[...gradedPages],translationAnswers:[...translationAnswers],gradedTranslationPages:[...gradedTranslationPages],unscrambleAnswers:unscrambleAnswers.map(x=>[...x]),gradedUnscramblePages:[...gradedUnscramblePages],listeningAnswers:listeningAnswers.map(x=>[...x]),gradedListeningPages:[...gradedListeningPages],currentPage,currentTranslationPage,currentUnscramblePage,currentListeningPage,currentVerbLesson,verbRunMode,verbState:JSON.parse(JSON.stringify(verbState)),currentVerbVocabLesson,verbVocabMode,verbVocabState:JSON.parse(JSON.stringify(verbVocabState)),verbVocabErrorCounts:JSON.parse(JSON.stringify(verbVocabErrorCounts)),currentVerbFormsLesson,verbFormsState:JSON.parse(JSON.stringify(verbFormsState)),verbFormsErrorCounts:JSON.parse(JSON.stringify(verbFormsErrorCounts)),vocabularyGroup,currentVocabularyLesson,vocabularyState:JSON.parse(JSON.stringify(vocabularyState)),currentView,savedAt:new Date().toISOString()
     };
     localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
     const el=document.getElementById('saveStatus');if(el){el.textContent='✓ Progresso salvo automaticamente';el.style.background='#ecfdf5';el.style.color='#166534';}
@@ -551,14 +597,17 @@ function restoreProgress(){
     currentVerbFormsLesson=(st.currentVerbFormsLesson==='all'||verbLessons[String(st.currentVerbFormsLesson)])?String(st.currentVerbFormsLesson):'1';
     if(st.verbFormsState&&typeof st.verbFormsState==='object')Object.assign(verbFormsState,st.verbFormsState);
     if(st.verbFormsErrorCounts&&typeof st.verbFormsErrorCounts==='object')Object.assign(verbFormsErrorCounts,st.verbFormsErrorCounts);
-    currentView=['questions','translation','unscramble','listening','verbs','verbvocab','verbforms'].includes(st.currentView)?st.currentView:'questions';
+    if(st.vocabularyGroup==='A1'||st.vocabularyGroup==='A2')vocabularyGroup=st.vocabularyGroup;
+    if(Number.isInteger(st.currentVocabularyLesson))currentVocabularyLesson=st.currentVocabularyLesson;
+    if(st.vocabularyState&&typeof st.vocabularyState==='object')Object.assign(vocabularyState,st.vocabularyState);
+    currentView=['home','questions','translation','unscramble','listening','verbs','verbvocab','verbforms','vocabulary'].includes(st.currentView)?st.currentView:'home';
     return true;
   }catch(err){return false;}
 }
 function resetAllProgress(){
   if(!confirm('Tem certeza que deseja apagar TODO o progresso de Perguntas, Traduza, Unscramble, Listening Unscramble, Verbos e Treino de Verbos e Formas Verbais? Esta ação não pode ser desfeita.'))return;
   localStorage.removeItem(STORAGE_KEY);
-  answers.fill(null);gradedPages.fill(false);translationAnswers.fill('');gradedTranslationPages.fill(false);for(let i=0;i<unscrambleAnswers.length;i++)unscrambleAnswers[i]=[];gradedUnscramblePages.fill(false);for(let i=0;i<listeningAnswers.length;i++)listeningAnswers[i]=[];gradedListeningPages.fill(false);currentPage=0;currentTranslationPage=0;currentUnscramblePage=0;currentListeningPage=0;currentVerbLesson=1;verbRunMode='normal';Object.keys(verbState).forEach(k=>delete verbState[k]);currentVerbVocabLesson='1';verbVocabMode='pten';Object.keys(verbVocabState).forEach(k=>delete verbVocabState[k]);Object.keys(verbVocabErrorCounts).forEach(k=>delete verbVocabErrorCounts[k]);currentVerbFormsLesson='1';Object.keys(verbFormsState).forEach(k=>delete verbFormsState[k]);Object.keys(verbFormsErrorCounts).forEach(k=>delete verbFormsErrorCounts[k]);currentView='questions';showQuestions();renderPage();saveProgress();
+  answers.fill(null);gradedPages.fill(false);translationAnswers.fill('');gradedTranslationPages.fill(false);for(let i=0;i<unscrambleAnswers.length;i++)unscrambleAnswers[i]=[];gradedUnscramblePages.fill(false);for(let i=0;i<listeningAnswers.length;i++)listeningAnswers[i]=[];gradedListeningPages.fill(false);currentPage=0;currentTranslationPage=0;currentUnscramblePage=0;currentListeningPage=0;currentVerbLesson=1;verbRunMode='normal';Object.keys(verbState).forEach(k=>delete verbState[k]);currentVerbVocabLesson='1';verbVocabMode='pten';Object.keys(verbVocabState).forEach(k=>delete verbVocabState[k]);Object.keys(verbVocabErrorCounts).forEach(k=>delete verbVocabErrorCounts[k]);currentVerbFormsLesson='1';Object.keys(verbFormsState).forEach(k=>delete verbFormsState[k]);Object.keys(verbFormsErrorCounts).forEach(k=>delete verbFormsErrorCounts[k]);currentView='home';showHome();saveProgress();
 }
 
 const quiz=document.getElementById('quiz');
@@ -571,6 +620,60 @@ const verbsView=document.getElementById('verbsView');
 const verbVocabView=document.getElementById('verbVocabView');
 
 
+
+
+function hideAllMainViews(){
+  ['homeView','vocabularyView','questionsView','translationView','unscrambleView','listeningView','verbsView','verbVocabView','verbFormsView'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.add('hidden');
+  });
+}
+function showHome(){
+  currentView='home';
+  hideAllMainViews();
+  document.getElementById('homeView').classList.remove('hidden');
+  document.getElementById('testDashboard').classList.add('hidden');
+  document.getElementById('verbDashboard').classList.add('hidden');
+  document.getElementById('topProgress').classList.add('hidden');
+  document.querySelectorAll('.nav-main').forEach(b=>b.classList.remove('active'));
+  document.getElementById('homeTab').classList.add('active');
+  document.getElementById('topTitle').textContent='Home · Meu Progresso';
+  document.getElementById('topSubtitle').textContent='Visão geral';
+  updateHomeDashboard();
+  closeMenu();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateHomeDashboard(){
+  const q=answers.filter(v=>v!==null).length;
+  const t=translationAnswers.filter(v=>typeof v==='string'&&v.trim()).length;
+  const u=questions.filter((_,i)=>unscrambleAnswers[i].length===sentenceTokens(i).length).length;
+  const l=questions.filter((_,i)=>listeningAnswers[i].length===sentenceTokens(i).length).length;
+  [['Q',q],['T',t],['U',u],['L',l]].forEach(([k,n])=>{
+    const v=document.getElementById(`home${k}Value`),b=document.getElementById(`home${k}Bar`),p=document.getElementById(`home${k}Pct`);
+    if(v)v.textContent=`${n} / 100`;if(b)b.style.width=n+'%';if(p)p.textContent=n+'%';
+  });
+
+  const all=vvLessonVerbs('all'),doneVV=new Set();
+  Object.values(verbVocabState).forEach(s=>{if(s&&Array.isArray(s.mastered))s.mastered.forEach(v=>{if(typeof v==='string')doneVV.add(v);});});
+  const vvTotal=all.length||45,vvDone=Math.min(doneVV.size,vvTotal),vvPct=vvTotal?Math.round(vvDone/vvTotal*100):0;
+
+  const vfTotal=all.filter(v=>verbFormsData[v]).reduce((n,v)=>n+verbFormsData[v].filter(x=>x&&x!=='—').length,0),vfDoneSet=new Set();
+  Object.values(verbFormsState).forEach(s=>(s&&s.mastered||[]).forEach(x=>vfDoneSet.add(x)));
+  const vfDone=Math.min(vfDoneSet.size,vfTotal),vfPct=vfTotal?Math.round(vfDone/vfTotal*100):0;
+
+  let vsTotal=0,vsDone=0;verbLessonIds().forEach(l=>{const cards=verbLessons[String(l)].cards;vsTotal+=cards.length;const s=ensureVerbState(l);vsDone+=new Set(s.mastered||[]).size;});
+  const vsPct=vsTotal?Math.round(vsDone/vsTotal*100):0;
+  [['VV',vvDone,vvTotal,vvPct],['VF',vfDone,vfTotal,vfPct],['VS',vsDone,vsTotal,vsPct]].forEach(([k,d,total,pct])=>{
+    const v=document.getElementById(`home${k}Value`),b=document.getElementById(`home${k}Bar`),p=document.getElementById(`home${k}Pct`);
+    if(v)v.textContent=`${d} / ${total}`;if(b)b.style.width=pct+'%';if(p)p.textContent=pct+'%';
+  });
+
+  [['A1',VOCAB_A1_LESSONS,320],['A2',VOCAB_A2_LESSONS,300]].forEach(([g,ls,target])=>{
+    let done=0;ls.forEach(li=>{const s=ensureVocabularyState(g,li);done+=new Set(s.done).size});
+    const pct=target?Math.round(done/target*100):0;
+    const v=document.getElementById(`home${g}Value`),b=document.getElementById(`home${g}Bar`),m=document.getElementById(`home${g}Meta`);
+    if(v)v.textContent=pct+'%';if(b)b.style.width=pct+'%';if(m)m.textContent=`${done} / ${target}`;
+  });
+}
 
 function setDashboardGroup(group){
   const tests=document.getElementById('testDashboard'),verbs=document.getElementById('verbDashboard');
@@ -601,7 +704,7 @@ function updateDashboard(){
   [["Q",q],["T",t],["U",u],["L",l]].forEach(([k,n])=>{
     const v=document.getElementById(`dash${k}Value`),b=document.getElementById(`dash${k}Bar`),p=document.getElementById(`dash${k}Pct`);
     if(v)v.textContent=`${n} / 100`; if(b)b.style.width=`${n}%`; if(p)p.textContent=`${n}%`;
-  });  updateVerbDashboard();
+  });  updateVerbDashboard();if(document.getElementById('homeView'))updateHomeDashboard();
 }
 
 function pageBounds(page=currentPage){const start=page*PAGE_SIZE;return [start,Math.min(start+PAGE_SIZE,questions.length)];}
@@ -735,7 +838,7 @@ function resetCurrentPage(){
   const [start,end]=pageBounds(); for(let i=start;i<end;i++) answers[i]=null; gradedPages[currentPage]=false; renderPage(); saveProgress();
 }
 function setPage(page){currentView='questions';currentPage=page;showQuestions();renderPage();closeMenu();scheduleSave();}
-function showQuestions(){setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');currentView='questions';document.getElementById('questionsView').classList.remove('hidden');document.getElementById('translationView').classList.add('hidden');document.getElementById('unscrambleView').classList.add('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('questionsTab').classList.add('active');document.getElementById('translateTab').classList.remove('active');document.getElementById('unscrambleTab').classList.remove('active');document.getElementById('listeningTab').classList.remove('active');document.getElementById('topProgress').classList.remove('hidden');document.getElementById('questionPages').classList.remove('hidden');document.getElementById('translationPages').classList.add('hidden');document.getElementById('unscramblePages').classList.add('hidden');document.getElementById('listeningPages').classList.add('hidden');}
+function showQuestions(){document.getElementById('homeView').classList.add('hidden');setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');currentView='questions';document.getElementById('questionsView').classList.remove('hidden');document.getElementById('translationView').classList.add('hidden');document.getElementById('unscrambleView').classList.add('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('questionsTab').classList.add('active');document.getElementById('translateTab').classList.remove('active');document.getElementById('unscrambleTab').classList.remove('active');document.getElementById('listeningTab').classList.remove('active');document.getElementById('topProgress').classList.remove('hidden');document.getElementById('questionPages').classList.remove('hidden');document.getElementById('translationPages').classList.add('hidden');document.getElementById('unscramblePages').classList.add('hidden');document.getElementById('listeningPages').classList.add('hidden');}
 function completeSentence(q){
   let text=q[0], ans=q[1][q[2]];
   const blanks=(text.match(/_____/g)||[]).length;
@@ -788,7 +891,7 @@ function gradeTranslationPage(scroll=true){
 function escapeHtml(text){return text.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
 function resetTranslationPage(){const [start,end]=translationBounds();for(let i=start;i<end;i++)translationAnswers[i]='';gradedTranslationPages[currentTranslationPage]=false;renderTranslationPage();saveProgress();}
 function setTranslationPage(page){currentView='translation';currentTranslationPage=page;showTranslation();renderTranslationPage();closeMenu();scheduleSave();}
-function showTranslation(){setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');currentView='translation';document.getElementById('questionsView').classList.add('hidden');document.getElementById('translationView').classList.remove('hidden');document.getElementById('unscrambleView').classList.add('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('questionsTab').classList.remove('active');document.getElementById('translateTab').classList.add('active');document.getElementById('unscrambleTab').classList.remove('active');document.getElementById('listeningTab').classList.remove('active');document.getElementById('questionPages').classList.add('hidden');document.getElementById('translationPages').classList.remove('hidden');document.getElementById('unscramblePages').classList.add('hidden');document.getElementById('listeningPages').classList.add('hidden');document.getElementById('topProgress').classList.remove('hidden');renderTranslationPage();closeMenu();}
+function showTranslation(){document.getElementById('homeView').classList.add('hidden');setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');currentView='translation';document.getElementById('questionsView').classList.add('hidden');document.getElementById('translationView').classList.remove('hidden');document.getElementById('unscrambleView').classList.add('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('questionsTab').classList.remove('active');document.getElementById('translateTab').classList.add('active');document.getElementById('unscrambleTab').classList.remove('active');document.getElementById('listeningTab').classList.remove('active');document.getElementById('questionPages').classList.add('hidden');document.getElementById('translationPages').classList.remove('hidden');document.getElementById('unscramblePages').classList.add('hidden');document.getElementById('listeningPages').classList.add('hidden');document.getElementById('topProgress').classList.remove('hidden');renderTranslationPage();closeMenu();}
 function unscrambleBounds(page=currentUnscramblePage){const start=page*PAGE_SIZE;return [start,Math.min(start+PAGE_SIZE,questions.length)];}
 function sentenceTokens(i){
   const parts=completeSentence(questions[i]).trim().split(/\s+/);
@@ -857,7 +960,7 @@ function gradeUnscramblePage(scroll=true){
 }
 function resetUnscramblePage(){const [start,end]=unscrambleBounds();for(let i=start;i<end;i++)unscrambleAnswers[i]=[];gradedUnscramblePages[currentUnscramblePage]=false;renderUnscramblePage();saveProgress();}
 function setUnscramblePage(page){currentView='unscramble';currentUnscramblePage=page;showUnscramble();renderUnscramblePage();closeMenu();scheduleSave();}
-function showUnscramble(){setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');currentView='unscramble';document.getElementById('questionsView').classList.add('hidden');document.getElementById('translationView').classList.add('hidden');document.getElementById('unscrambleView').classList.remove('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('questionsTab').classList.remove('active');document.getElementById('translateTab').classList.remove('active');document.getElementById('unscrambleTab').classList.add('active');document.getElementById('listeningTab').classList.remove('active');document.getElementById('questionPages').classList.add('hidden');document.getElementById('translationPages').classList.add('hidden');document.getElementById('unscramblePages').classList.remove('hidden');document.getElementById('listeningPages').classList.add('hidden');document.getElementById('topProgress').classList.remove('hidden');renderUnscramblePage();closeMenu();}
+function showUnscramble(){document.getElementById('homeView').classList.add('hidden');setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');currentView='unscramble';document.getElementById('questionsView').classList.add('hidden');document.getElementById('translationView').classList.add('hidden');document.getElementById('unscrambleView').classList.remove('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('questionsTab').classList.remove('active');document.getElementById('translateTab').classList.remove('active');document.getElementById('unscrambleTab').classList.add('active');document.getElementById('listeningTab').classList.remove('active');document.getElementById('questionPages').classList.add('hidden');document.getElementById('translationPages').classList.add('hidden');document.getElementById('unscramblePages').classList.remove('hidden');document.getElementById('listeningPages').classList.add('hidden');document.getElementById('topProgress').classList.remove('hidden');renderUnscramblePage();closeMenu();}
 
 
 function listeningBounds(page=currentListeningPage){const start=page*PAGE_SIZE;return [start,Math.min(start+PAGE_SIZE,questions.length)];}
@@ -935,7 +1038,7 @@ function gradeListeningPage(scroll=true){
 }
 function resetListeningPage(){const [start,end]=listeningBounds();for(let i=start;i<end;i++)listeningAnswers[i]=[];gradedListeningPages[currentListeningPage]=false;renderListeningPage();saveProgress();}
 function setListeningPage(page){currentView='listening';currentListeningPage=page;showListening();renderListeningPage();closeMenu();scheduleSave();}
-function showListening(){setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');
+function showListening(){document.getElementById('homeView').classList.add('hidden');setDashboardGroup('tests');document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');document.getElementById('verbsView').classList.add('hidden');document.getElementById('verbsTab').classList.remove('active');document.getElementById('verbLessonsNav').classList.add('hidden');
   currentView='listening';document.getElementById('questionsView').classList.add('hidden');document.getElementById('translationView').classList.add('hidden');document.getElementById('unscrambleView').classList.add('hidden');document.getElementById('listeningView').classList.remove('hidden');
   document.getElementById('questionsTab').classList.remove('active');document.getElementById('translateTab').classList.remove('active');document.getElementById('unscrambleTab').classList.remove('active');document.getElementById('listeningTab').classList.add('active');
   document.getElementById('questionPages').classList.add('hidden');document.getElementById('translationPages').classList.add('hidden');document.getElementById('unscramblePages').classList.add('hidden');document.getElementById('listeningPages').classList.remove('hidden');document.getElementById('topProgress').classList.remove('hidden');renderListeningPage();closeMenu();
@@ -947,7 +1050,7 @@ function ensureVerbState(lesson){const key=String(lesson),total=verbLessons[key]
 function verbLessonIds(){return Object.keys(verbLessons).map(Number).sort((a,b)=>a-b);}
 function updateVerbOverview(){let total=0,done=0;verbLessonIds().forEach(l=>{const cards=verbLessons[String(l)].cards;total+=cards.length;const s=ensureVerbState(l);done+=new Set(s.mastered).size;});const pct=total?Math.round(done/total*100):0;const meta=document.getElementById('verbOverallMeta'),bar=document.getElementById('verbOverallBar');if(meta)meta.textContent=`${done} de ${total} cards concluídos · ${pct}%`;if(bar)bar.style.width=pct+'%';}
 function renderVerbLessonNav(){const nav=document.getElementById('verbLessonsNav'),grid=document.getElementById('verbLessonGrid');const html=verbLessonIds().map(l=>{const total=verbLessons[String(l)].cards.length,s=ensureVerbState(l),done=new Set(s.mastered).size,pct=total?Math.round(done/total*100):0;return `<button class="page-link verb-lesson-link ${l===currentVerbLesson?'active':''}" data-vlesson="${l}">Lição ${l} <span style="opacity:.72">(${done}/${total})</span></button>`;}).join('');nav.innerHTML=html;nav.querySelectorAll('.verb-lesson-link').forEach(b=>b.addEventListener('click',()=>openVerbLesson(Number(b.dataset.vlesson))));grid.innerHTML=verbLessonIds().map(l=>{const total=verbLessons[String(l)].cards.length,s=ensureVerbState(l),done=new Set(s.mastered).size,pct=total?Math.round(done/total*100):0;return `<button class="verb-lesson-btn ${l===currentVerbLesson&&currentView==='verbs'?'active':''}" data-vgrid="${l}"><div class="verb-lesson-name">Lição ${l}</div><div class="verb-lesson-meta">${done}/${total} · ${pct}%</div><div class="verb-mini"><span style="width:${pct}%"></span></div></button>`;}).join('');grid.querySelectorAll('.verb-lesson-btn').forEach(b=>b.addEventListener('click',()=>openVerbLesson(Number(b.dataset.vgrid))));updateVerbOverview();}
-function showVerbs(selectOnly=false){setDashboardGroup('verbs');updateVerbDashboard();document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');currentView='verbs';document.getElementById('questionsView').classList.add('hidden');document.getElementById('translationView').classList.add('hidden');document.getElementById('unscrambleView').classList.add('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('verbsView').classList.remove('hidden');['questionsTab','translateTab','unscrambleTab','listeningTab'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('verbsTab').classList.add('active');['questionPages','translationPages','unscramblePages','listeningPages'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('verbLessonsNav').classList.remove('hidden');document.getElementById('topProgress').classList.add('hidden');renderVerbLessonNav();if(selectOnly){document.getElementById('verbLessonSelect').classList.remove('hidden');document.getElementById('verbPracticePanel').classList.add('hidden');}else renderVerbCard();closeMenu();scheduleSave();}
+function showVerbs(selectOnly=false){document.getElementById('homeView').classList.add('hidden');setDashboardGroup('verbs');updateVerbDashboard();document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');document.getElementById('verbVocabView').classList.add('hidden');document.getElementById('verbVocabTab').classList.remove('active');document.getElementById('verbVocabNav').classList.add('hidden');currentView='verbs';document.getElementById('questionsView').classList.add('hidden');document.getElementById('translationView').classList.add('hidden');document.getElementById('unscrambleView').classList.add('hidden');document.getElementById('listeningView').classList.add('hidden');document.getElementById('verbsView').classList.remove('hidden');['questionsTab','translateTab','unscrambleTab','listeningTab'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('verbsTab').classList.add('active');['questionPages','translationPages','unscramblePages','listeningPages'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('verbLessonsNav').classList.remove('hidden');document.getElementById('topProgress').classList.add('hidden');renderVerbLessonNav();if(selectOnly){document.getElementById('verbLessonSelect').classList.remove('hidden');document.getElementById('verbPracticePanel').classList.add('hidden');}else renderVerbCard();closeMenu();scheduleSave();}
 function currentVerbSequence(){const s=ensureVerbState(currentVerbLesson);return verbRunMode==='review'?(s.reviewOrder||[]):s.order;}
 function currentVerbPos(){const s=ensureVerbState(currentVerbLesson);return verbRunMode==='review'?(s.reviewPos||0):(s.pos||0);}
 function setCurrentVerbPos(v){const s=ensureVerbState(currentVerbLesson);if(verbRunMode==='review')s.reviewPos=v;else s.pos=v;}
@@ -1066,7 +1169,7 @@ function vvRenderComplete(){
   document.getElementById('vvChoose').addEventListener('click',()=>showVerbVocab(true));
   vvUpdateOverall();scheduleSave();
 }
-function showVerbVocab(selectOnly=true){setDashboardGroup('verbs');updateVerbDashboard();document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');
+function showVerbVocab(selectOnly=true){document.getElementById('homeView').classList.add('hidden');setDashboardGroup('verbs');updateVerbDashboard();document.getElementById('verbFormsView').classList.add('hidden');document.getElementById('verbFormsTab').classList.remove('active');document.getElementById('verbFormsNav').classList.add('hidden');
   currentView='verbvocab';
   ['questionsView','translationView','unscrambleView','listeningView','verbsView'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('verbVocabView').classList.remove('hidden');
@@ -1141,7 +1244,7 @@ function vfRenderComplete(){
  const p=document.getElementById('vfPracticePanel'),s=vfEnsureState();p.innerHTML=`<div class="verb-card"><div class="verb-kicker">Rodada concluída</div><div class="vv-word" style="font-size:28px">Formas verbais concluídas!</div><div class="verb-list-summary">${s.firstTry} acertos de primeira · ${s.wrong} erros durante a rodada.</div><div class="vv-actions"><button class="btn btn-next" id="vfRedo">↻ Refazer embaralhado</button><button class="btn btn-light" id="vfChoose">Escolher lição</button></div></div>`;
  document.getElementById('vfRedo').addEventListener('click',()=>{delete verbFormsState[vfKey()];vfRenderCard();});document.getElementById('vfChoose').addEventListener('click',()=>showVerbForms(true));vfUpdateOverall();scheduleSave();
 }
-function showVerbForms(selectOnly=true){setDashboardGroup('verbs');updateVerbDashboard();
+function showVerbForms(selectOnly=true){document.getElementById('homeView').classList.add('hidden');setDashboardGroup('verbs');updateVerbDashboard();
  currentView='verbforms';['questionsView','translationView','unscrambleView','listeningView','verbsView','verbVocabView'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('verbFormsView').classList.remove('hidden');
  ['questionsTab','translateTab','unscrambleTab','listeningTab','verbsTab','verbVocabTab'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('verbFormsTab').classList.add('active');
  ['questionPages','translationPages','unscramblePages','listeningPages','verbLessonsNav','verbVocabNav'].forEach(id=>document.getElementById(id).classList.add('hidden'));document.getElementById('verbFormsNav').classList.remove('hidden');document.getElementById('topProgress').classList.add('hidden');
@@ -1450,8 +1553,8 @@ function triggerVocabularyCheck(){
 function checkVocabularyAnswer(correct,idx){const inp=document.getElementById('vocabularyAnswer'),fb=document.getElementById('vocabularyFeedback'),s=ensureVocabularyState(vocabularyGroup,currentVocabularyLesson),got=normalizeTranslation(inp.value);if(!got){fb.className='verb-feedback show bad';fb.textContent='Digite uma resposta antes de corrigir.';inp.focus();return;}if(got===normalizeTranslation(correct)){fb.className='verb-feedback show good';fb.innerHTML=`✓ Correto.<div class="vocab-correct-answer">${escapeHtml(correct)}</div>`;s.correct++;if(!s.done.includes(idx))s.done.push(idx);s.pos++;setTimeout(renderVocabularyCard,650)}else{fb.className='verb-feedback show bad';fb.innerHTML=`Ainda não. Tente novamente.<div class="vocab-didactic">A resposta correta não é revelada antes do acerto.</div>`;s.wrong++;inp.select()}updateVocabularyProgress();scheduleSave()}
 function backVocabularyLessons(){document.getElementById('vocabularyPractice').classList.add('hidden');document.getElementById('vocabularyLessonGrid').classList.remove('hidden');renderVocabularyLessons()}
 function restartVocabularyLesson(){const k=vocabKey(vocabularyGroup,currentVocabularyLesson),n=(vocabularyData[vocabularyGroup][currentVocabularyLesson]||[]).length;vocabularyState[k]={n,order:shuffledArray(n),pos:0,done:[],correct:0,wrong:0,answer:''};renderVocabularyCard()}
-function updateVocabularyProgress(){[['A1',VOCAB_A1_LESSONS,320],['A2',VOCAB_A2_LESSONS,300]].forEach(([g,ls,target])=>{let done=0;ls.forEach(l=>{const s=ensureVocabularyState(g,l);done+=new Set(s.done).size});const pct=Math.round(done/target*100);document.getElementById('vocab'+g+'Value').textContent=pct+'%';document.getElementById('vocab'+g+'Bar').style.width=pct+'%';document.getElementById('vocab'+g+'Meta').textContent=done+' / '+target})}
-function showVocabulary(){currentView='vocabulary';['questionsView','translationView','unscrambleView','listeningView','verbsView','verbVocabView','verbFormsView'].forEach(id=>document.getElementById(id).classList.add('hidden'));['questionsTab','translateTab','unscrambleTab','listeningTab','verbsTab','verbVocabTab','verbFormsTab'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('vocabularyView').classList.remove('hidden');document.getElementById('vocabularyTab').classList.add('active');document.getElementById('testDashboard').classList.add('hidden');document.getElementById('verbDashboard').classList.add('hidden');document.getElementById('topProgress').classList.add('hidden');document.getElementById('vocabularyGroupsNav').classList.remove('hidden');document.getElementById('vocabularyHeroChip').textContent=`Grupo ${vocabularyGroup}`;renderVocabularyLessons();closeMenu()}
+function updateVocabularyProgress(){[['A1',VOCAB_A1_LESSONS,320],['A2',VOCAB_A2_LESSONS,300]].forEach(([g,ls,target])=>{let done=0;ls.forEach(l=>{const s=ensureVocabularyState(g,l);done+=new Set(s.done).size});const pct=Math.round(done/target*100);document.getElementById('vocab'+g+'Value').textContent=pct+'%';document.getElementById('vocab'+g+'Bar').style.width=pct+'%';document.getElementById('vocab'+g+'Meta').textContent=done+' / '+target});if(document.getElementById('homeView'))updateHomeDashboard()}
+function showVocabulary(){currentView='vocabulary';['homeView','questionsView','translationView','unscrambleView','listeningView','verbsView','verbVocabView','verbFormsView'].forEach(id=>document.getElementById(id).classList.add('hidden'));['questionsTab','translateTab','unscrambleTab','listeningTab','verbsTab','verbVocabTab','verbFormsTab'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('vocabularyView').classList.remove('hidden');document.getElementById('vocabularyTab').classList.add('active');document.getElementById('testDashboard').classList.add('hidden');document.getElementById('verbDashboard').classList.add('hidden');document.getElementById('topProgress').classList.add('hidden');document.getElementById('vocabularyGroupsNav').classList.remove('hidden');document.getElementById('vocabularyHeroChip').textContent=`Grupo ${vocabularyGroup}`;renderVocabularyLessons();closeMenu()}
 
 const oldDictFab=document.getElementById('gibsDictFab');
 if(oldDictFab)oldDictFab.addEventListener('click',openGibsDictionary);
@@ -1460,11 +1563,24 @@ document.getElementById('gibsDictInput').addEventListener('input',e=>renderGibsD
 document.getElementById('gibsDictBackdrop').addEventListener('click',e=>{if(e.target.id==='gibsDictBackdrop')closeGibsDictionary();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('gibsDictBackdrop').classList.contains('hidden'))closeGibsDictionary();});
 
-document.getElementById('homeTab').addEventListener('click',()=>{
-  setDashboardGroup(['verbs','verbvocab','verbforms'].includes(currentView)?'verbs':'tests');
-  updateDashboard();closeMenu();
-  window.scrollTo({top:0,behavior:'smooth'});
-});
+document.getElementById('homeTab').addEventListener('click',()=>{showHome();scheduleSave();});
+
+function bindHomeCard(id,fn){
+  const el=document.getElementById(id);if(!el)return;
+  const go=()=>{fn();scheduleSave();};
+  el.addEventListener('click',go);
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
+}
+bindHomeCard('homeDashQuestions',()=>{showQuestions();renderPage();});
+bindHomeCard('homeDashTranslation',()=>showTranslation());
+bindHomeCard('homeDashUnscramble',()=>showUnscramble());
+bindHomeCard('homeDashListening',()=>showListening());
+bindHomeCard('homeVocabA1',()=>openVocabularyGroup('A1'));
+bindHomeCard('homeVocabA2',()=>openVocabularyGroup('A2'));
+bindHomeCard('homeDashVerbVocab',()=>showVerbVocab(true));
+bindHomeCard('homeDashVerbForms',()=>showVerbForms(true));
+bindHomeCard('homeDashVerbSentences',()=>showVerbs(true));
+
 document.getElementById('vocabularyTab').addEventListener('click',()=>{showVocabulary();scheduleSave();});
 document.querySelectorAll('[data-vocab-menu-group]').forEach(b=>b.addEventListener('click',()=>{openVocabularyGroup(b.dataset.vocabMenuGroup);scheduleSave();}));
 function bindVocabularyProgressCard(id,group){
@@ -1517,10 +1633,30 @@ document.getElementById('resetAllBtn').addEventListener('click',resetAllProgress
 window.addEventListener('beforeunload',saveProgress);
 
 restoreProgress();
-if(currentView==='vocabulary')showVocabulary();else if(currentView==='translation')showTranslation();else if(currentView==='unscramble')showUnscramble();else if(currentView==='listening')showListening();else if(currentView==='verbs')showVerbs(false);else if(currentView==='verbvocab')showVerbVocab(false);else if(currentView==='verbforms')showVerbForms(false);else{showQuestions();renderPage();}
+const SESSION_HOME_KEY='gibsAcademySessionStarted_v1';
+const isNewTab=!sessionStorage.getItem(SESSION_HOME_KEY);
+sessionStorage.setItem(SESSION_HOME_KEY,'1');
+if(isNewTab){
+  showHome();
+}else if(currentView==='home'){
+  showHome();
+}else if(currentView==='vocabulary'){
+  showVocabulary();
+  if(currentVocabularyLesson!==null && vocabularyData[vocabularyGroup]?.[currentVocabularyLesson]){
+    document.getElementById('vocabularyLessonGrid').classList.add('hidden');
+    renderVocabularyCard();
+  }
+}else if(currentView==='translation')showTranslation();
+else if(currentView==='unscramble')showUnscramble();
+else if(currentView==='listening')showListening();
+else if(currentView==='verbs')showVerbs(false);
+else if(currentView==='verbvocab')showVerbVocab(false);
+else if(currentView==='verbforms')showVerbForms(false);
+else{showQuestions();renderPage();}
 saveProgress();
 
 updateDashboard();
+updateHomeDashboard();
 syncMenuButton();
 </script>
 </body>
