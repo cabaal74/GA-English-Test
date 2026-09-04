@@ -1609,14 +1609,30 @@ function vvDirectionFor(lemma,pos){
   return ((h+pos)%2===0)?'pten':'enpt';
 }
 function vvEnglish(v){return `to ${String(v).toLowerCase()}`;}
-function vvDistractors(answer,lesson){
-  const local=vvLessonVerbs(lesson).filter(v=>v!==answer);
-  const global=Object.keys(verbVocabularyPT).filter(v=>v!==answer&&!local.includes(v));
+function vvMeaningParts(v){
+  return String(verbVocabularyPT[v]||'').toLowerCase().split('/').map(x=>x.trim().replace(/\s*\(de\)\s*/g,'').trim()).filter(Boolean);
+}
+function vvMeaningsOverlap(a,b){
+  const A=new Set(vvMeaningParts(a));
+  return vvMeaningParts(b).some(x=>A.has(x));
+}
+function vvValidVerbsForPortuguese(lemma){
+  return Object.keys(verbVocabularyPT).filter(v=>vvMeaningsOverlap(v,lemma));
+}
+function vvDistractors(answer,lesson,dir){
+  const conflicts=new Set(vvValidVerbsForPortuguese(answer));
+  const allowed=v=>v!==answer&&!conflicts.has(v);
+  const local=vvLessonVerbs(lesson).filter(allowed);
+  const global=Object.keys(verbVocabularyPT).filter(v=>allowed(v)&&!local.includes(v));
   return vvShuffle(local).concat(vvShuffle(global)).slice(0,3);
 }
 function vvCardOptions(lemma,dir){
-  const verbs=vvShuffle([lemma,...vvDistractors(lemma,currentVerbVocabLesson)]);
-  return verbs.map(v=>({v,label:dir==='pten'?vvEnglish(v):String(verbVocabularyPT[v]||'').toLowerCase()}));
+  const verbs=vvShuffle([lemma,...vvDistractors(lemma,currentVerbVocabLesson,dir)]);
+  const seen=new Set();
+  return verbs.map(v=>({v,label:dir==='pten'?vvEnglish(v):String(verbVocabularyPT[v]||'').toLowerCase()})).filter(o=>{
+    const key=o.label.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    if(seen.has(key))return false;seen.add(key);return true;
+  });
 }
 function vvRenderNav(){
   const nav=document.getElementById('verbVocabNav');if(!nav)return;
@@ -1671,11 +1687,14 @@ function vvRenderCard(){
   vvRenderNav();scheduleSave();
 }
 function vvAnswer(btn,lemma,dir){
-  const s=vvEnsureState(),fb=document.getElementById('vvFeedback');
-  if(btn.dataset.vv===lemma){
+  const s=vvEnsureState(),fb=document.getElementById('vvFeedback'),chosen=btn.dataset.vv;
+  const correct=dir==='pten'?vvMeaningsOverlap(chosen,lemma):chosen===lemma;
+  if(correct){
     btn.classList.add('correct');if(!s.hadError)s.firstTry++;if(!s.mastered.includes(lemma))s.mastered.push(lemma);
-    fb.className='vv-feedback ok';fb.textContent=`✓ correto — ${vvEnglish(lemma)} = ${String(verbVocabularyPT[lemma]||'').toLowerCase()}.`;
-    s.pos++;s.hadError=false;scheduleSave();setTimeout(vvRenderCard,550);
+    const equivalents=dir==='pten'?vvValidVerbsForPortuguese(lemma):[lemma];
+    const extra=dir==='pten'&&equivalents.length>1?` Também pode corresponder a: ${equivalents.filter(v=>v!==chosen).map(v=>vvEnglish(v)).join(', ')}.`:'';
+    fb.className='vv-feedback ok';fb.textContent=`✓ correto — ${vvEnglish(chosen)} = ${String(verbVocabularyPT[chosen]||'').toLowerCase()}.${extra}`;
+    s.pos++;s.hadError=false;scheduleSave();setTimeout(vvRenderCard,850);
   }else{
     btn.classList.add('wrong');btn.disabled=true;s.wrong++;s.hadError=true;verbVocabErrorCounts[lemma]=(verbVocabErrorCounts[lemma]||0)+1;
     fb.className='vv-feedback bad';fb.textContent='✗ Ainda não. Tente outra alternativa — a resposta correta não será revelada até você acertar.';
